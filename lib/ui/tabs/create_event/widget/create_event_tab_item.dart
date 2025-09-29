@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 
-class CreateEventTabItem extends StatelessWidget {
+class CreateEventTabItem extends StatefulWidget {
   const CreateEventTabItem({
     super.key,
     required this.eventName,
@@ -15,22 +15,33 @@ class CreateEventTabItem extends StatelessWidget {
   final String eventName;
   final bool isSelected;
 
-  static const Map<String, IconData> eventIcons = {
-    "meeting": Icons.people,
-    "gaming": Icons.sports_esports,
-    "work shop": Icons.handyman,
-    "book club": Icons.auto_stories,
-    "exhibition": Icons.museum,
-    "holiday": Icons.flight,
-    "eating": Icons.fastfood,
-    "birthday": Icons.cake,
-    "all": Icons.explore,
-    "sport": Icons.directions_bike,
-  };
 
 
   @override
-  Widget build(BuildContext context) { 
+  State<CreateEventTabItem> createState() => _CreateEventTabItemState();
+}
+
+class _CreateEventTabItemState extends State<CreateEventTabItem> {
+
+  Map<String, IconData> getEventIcons(BuildContext context) {
+    return {
+      AppLocalizations.of(context)!.meeting: Icons.people,
+      AppLocalizations.of(context)!.gaming: Icons.sports_esports,
+      AppLocalizations.of(context)!.work_shop: Icons.handyman,
+      AppLocalizations.of(context)!.book_club: Icons.auto_stories,
+      AppLocalizations.of(context)!.exhibition: Icons.museum,
+      AppLocalizations.of(context)!.holiday: Icons.flight,
+      AppLocalizations.of(context)!.eating: Icons.fastfood,
+      AppLocalizations.of(context)!.birthday: Icons.cake,
+      AppLocalizations.of(context)!.all: Icons.explore,
+      AppLocalizations.of(context)!.sport: Icons.directions_bike,
+    };
+  }
+  @override
+  Widget build(BuildContext context) {
+    final eventIcons = getEventIcons(context);
+
+
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
@@ -49,21 +60,21 @@ class CreateEventTabItem extends StatelessWidget {
           color: AppColors.primaryLight,
           width: 1,
         ),
-        color: isSelected
+        color: widget.isSelected
             ? AppColors.primaryLight
             : AppColors.transparentColor,
       ),
       child: Row(
         children: [
           Icon(
-            eventIcons[eventName.toLowerCase()] ,
-            color: isSelected ? Theme.of(context).disabledColor : AppColors.primaryLight
+            eventIcons[widget.eventName] ,
+            color: widget.isSelected ? Theme.of(context).disabledColor : AppColors.primaryLight
             ,
           ),
           const SizedBox(width: 8),
           Text(
-            eventName,
-            style: isSelected
+            widget.eventName,
+            style: widget.isSelected
                 ? Theme.of(context).textTheme.bodySmall
                 : AppStyles.bold16Primary,
           ),
