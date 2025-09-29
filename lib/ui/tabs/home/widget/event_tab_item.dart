@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 
-class EventTabItem extends StatelessWidget {
+class EventTabItem extends StatefulWidget {
   const EventTabItem({
     super.key,
     required this.eventName,
@@ -15,22 +15,28 @@ class EventTabItem extends StatelessWidget {
   final String eventName;
   final bool isSelected;
 
-  static const Map<String, IconData> eventIcons = {
-    "meeting": Icons.people,
-    "gaming": Icons.sports_esports,
-    "work shop": Icons.handyman,
-    "book club": Icons.auto_stories,
-    "exhibition": Icons.museum,
-    "holiday": Icons.flight,
-    "eating": Icons.fastfood,
-    "birthday": Icons.cake,
-    "all": Icons.explore,
-    "sport": Icons.directions_bike,
-  };
-
-
   @override
-  Widget build(BuildContext context) { 
+  State<EventTabItem> createState() => _EventTabItemState();
+}
+
+class _EventTabItemState extends State<EventTabItem> {
+  Map<String, IconData> getEventIcons(BuildContext context) {
+    return {
+      AppLocalizations.of(context)!.meeting: Icons.people,
+      AppLocalizations.of(context)!.gaming: Icons.sports_esports,
+      AppLocalizations.of(context)!.work_shop: Icons.handyman,
+      AppLocalizations.of(context)!.book_club: Icons.auto_stories,
+      AppLocalizations.of(context)!.exhibition: Icons.museum,
+      AppLocalizations.of(context)!.holiday: Icons.flight,
+      AppLocalizations.of(context)!.eating: Icons.fastfood,
+      AppLocalizations.of(context)!.birthday: Icons.cake,
+      AppLocalizations.of(context)!.all: Icons.explore,
+      AppLocalizations.of(context)!.sport: Icons.directions_bike,
+    };
+  }
+  @override
+  Widget build(BuildContext context) {
+    final eventIcons = getEventIcons(context);
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
@@ -49,20 +55,20 @@ class EventTabItem extends StatelessWidget {
           color: Theme.of(context).focusColor,
           width: 2,
         ),
-        color: isSelected
+        color: widget.isSelected
             ? Theme.of(context).focusColor
             : AppColors.transparentColor,
       ),
       child: Row(
         children: [
           Icon(
-            eventIcons[eventName.toLowerCase()] ,
-            color: isSelected ? Theme.of(context).cardColor : AppColors.whiteColor,
+            eventIcons[widget.eventName.toLowerCase()] ,
+            color: widget.isSelected ? Theme.of(context).cardColor : AppColors.whiteColor,
           ),
           const SizedBox(width: 8),
           Text(
-            eventName,
-            style: isSelected
+            widget.eventName,
+            style: widget.isSelected
                 ? Theme.of(context).textTheme.headlineMedium
                 : AppStyles.medium16white,
           ),
