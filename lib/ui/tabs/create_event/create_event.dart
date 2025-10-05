@@ -1,5 +1,7 @@
+import 'package:event_planningapp/firebase_utils.dart';
 import 'package:event_planningapp/home_screen/widget/custom_elevated_buttom.dart';
 import 'package:event_planningapp/home_screen/widget/custom_text_form_field.dart';
+import 'package:event_planningapp/model/event.dart';
 import 'package:event_planningapp/provider/app_theme_provider.dart';
 import 'package:event_planningapp/ui/tabs/create_event/widget/create_event_tab_item.dart';
 import 'package:event_planningapp/ui/tabs/create_event/widget/date_or_time_widget.dart';
@@ -11,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CreateEvent extends StatefulWidget {
    CreateEvent({super.key});
@@ -25,6 +28,8 @@ class _CreateEventState extends State<CreateEvent> {
   String? timeError;
   String? locationError;
   int selectedIndex=0;
+  String selectedEventImage="";
+  String selectedEventName="";
   TextEditingController eventTitleCRl=TextEditingController(text: "");
   TextEditingController descriptionCRl=TextEditingController(text: "");
   var formkey=GlobalKey<FormState>();
@@ -148,6 +153,7 @@ class _CreateEventState extends State<CreateEvent> {
                   AppLocalizations.of(context)!.chooseDate
                       :
                   formatDate!,
+
                     error: dateError!=null ?
                     Text(dateError!, style: AppStyles.medium12Red )
                   :null ,
@@ -243,13 +249,63 @@ class _CreateEventState extends State<CreateEvent> {
     });
   }
   void addEvent(){
-
     dateError = selectedDate == null ? "please Choose Event Date" : null;
     timeError = selectedTime == null ? "please Choose Event Time" : null;
     if (formkey.currentState?.validate()==true && dateError == null && timeError == null) {
-      //todo event to fire store
-    }
+      Event event=Event(
+          title: eventTitleCRl.text,
+          description:descriptionCRl.text ,
+          eventImage:selectedEventImage ,
+          eventName:selectedEventName ,
+          eventDateTime: selectedDate,
+          eventTime:formatTime
+      );
+      FireBaseUtils.addEventToFirestore(event).timeout(Duration(seconds: 1),
+          onTimeout:() {
+        //todo alert dialog - tasat - snack bar
+            final snackBar = SnackBar(
+              behavior: SnackBarBehavior.floating,
+              elevation: 6, // ظل خفيف
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              duration: Duration(seconds: 20),
+              content:
+              Text('Event Added'),backgroundColor: AppColors.primaryLight,
+              action: SnackBarAction(
+                textColor: AppColors.primaryLight,
+                label: 'Close' ,backgroundColor: AppColors.whiteColor,
+                onPressed: () {
+                  // Some code to undo the change.
+                },
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+            print("Event Successfully");
+            Navigator.pop(context);
+          }, ).catchError((error) {
+        print("Error: $error");
+      }
+      );    }
     setState(() {
     });
   }
 }
+
+/*
+            final snackBar = SnackBar(
+              content: const Text('Yay! A SnackBar!'),
+              action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () {
+                  // Some code to undo the change.
+                },
+              ),
+            );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+
+ */
