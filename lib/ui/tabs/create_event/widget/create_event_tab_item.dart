@@ -67,7 +67,7 @@ class _CreateEventTabItemState extends State<CreateEventTabItem> {
       child: Row(
         children: [
           Icon(
-            eventIcons[widget.eventName.toLowerCase()] ,
+            eventIcons[widget.eventName] ,
             color: widget.isSelected ? Theme.of(context).disabledColor : AppColors.primaryLight
             ,
           ),

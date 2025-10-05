@@ -112,7 +112,7 @@ class FirstTab extends StatelessWidget {
               ]
             ),
             CustomElevatedButtom(text: AppLocalizations.of(context)!.letsStart, onPressed: () {
-              Navigator.of(context).pushReplacementNamed(AppRoutes.loginScreenRouteNamed);
+              Navigator.of(context).pushReplacementNamed(AppRoutes.onBoardingScreenRoueNamed);
             },
               mainAxisAlignment: MainAxisAlignment.center,
             )          ],

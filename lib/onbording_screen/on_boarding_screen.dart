@@ -46,7 +46,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       ],
       onDone: () {
         Navigator.of(context)
-            .pushReplacementNamed(AppRoutes.homeScreenRouteNamed);
+            .pushReplacementNamed(AppRoutes.loginScreenRouteNamed);
       },
       showBackButton: true,
 

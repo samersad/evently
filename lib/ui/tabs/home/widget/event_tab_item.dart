@@ -62,7 +62,7 @@ class _EventTabItemState extends State<EventTabItem> {
       child: Row(
         children: [
           Icon(
-            eventIcons[widget.eventName.toLowerCase()] ,
+            eventIcons[widget.eventName] ,
             color: widget.isSelected ? Theme.of(context).cardColor : AppColors.whiteColor,
           ),
           const SizedBox(width: 8),
