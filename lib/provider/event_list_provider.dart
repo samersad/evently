@@ -62,6 +62,9 @@ class EventListProvider extends ChangeNotifier{
     filterEventsList = querySnapshot.docs.map((doc) {
      return  doc.data();
     },).toList();
+    filterEventsList.sort((event1, event2) {
+      return event1.eventDateTime!.compareTo(event2.eventDateTime!);
+    },);
     notifyListeners();
   }
   void changeSelectedIndex(int newSelectedIndex){
