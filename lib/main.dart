@@ -3,6 +3,7 @@ import 'package:event_planningapp/auth/register_screen/register_screen.dart';
 import 'package:event_planningapp/provider/app_language_provider.dart';
 import 'package:event_planningapp/provider/app_theme_provider.dart';
 import 'package:event_planningapp/home_screen/home_screen.dart';
+import 'package:event_planningapp/provider/event_list_provider.dart';
 import 'package:event_planningapp/ui/tabs/create_event/create_event.dart';
 import 'package:event_planningapp/ui/tabs/home/edit_event/edit_event.dart';
 import 'package:event_planningapp/ui/tabs/home/event_details/event_details.dart';
@@ -26,7 +27,8 @@ Future<void> main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) =>AppLanguageProvider() ,)  ,    
-      ChangeNotifierProvider(create: (context) =>AppThemeProvider() ,)
+      ChangeNotifierProvider(create: (context) =>AppThemeProvider() ,),
+      ChangeNotifierProvider(create: (context) =>EventListProvider() ,)
     ],
 
       child: const MyApp()));
