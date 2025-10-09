@@ -28,7 +28,7 @@ class FavoriteTap extends StatelessWidget {
               prefixIconName: Image.asset(AppAssets.searchIcon)),
             SizedBox(height: height*0.02,),
             Expanded(child:  ListView.separated(itemBuilder: (context, index) {
-          return EventItem();
+          return Container();
         }, separatorBuilder: (context, index) => SizedBox(height: height*0.01), itemCount: 10))
       
         ],

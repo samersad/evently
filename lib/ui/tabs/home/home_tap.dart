@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_planningapp/firebase_utils.dart';
 import 'package:event_planningapp/l10n/app_localizations.dart';
 import 'package:event_planningapp/provider/app_language_provider.dart';
 import 'package:event_planningapp/ui/tabs/home/widget/event_item.dart';
@@ -11,7 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:provider/provider.dart';
 
+import '../../../model/event.dart';
 import '../../../provider/app_theme_provider.dart';
+import '../../../provider/event_list_provider.dart';
 
 
 class HomeTap extends StatefulWidget {
@@ -35,24 +39,25 @@ class _HomeTapState extends State<HomeTap> {
     Icons.fastfood,
   ];
 
-  int selectedIndex=0;
+   late EventListProvider eventListProvider;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      eventListProvider.getAllEvent();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<String> eventNameList=[
-      AppLocalizations.of(context)!.all,
-      AppLocalizations.of(context)!.sport,
-      AppLocalizations.of(context)!.birthday,
-      AppLocalizations.of(context)!.meeting,
-      AppLocalizations.of(context)!.gaming,
-      AppLocalizations.of(context)!.work_shop,
-      AppLocalizations.of(context)!.book_club,
-      AppLocalizations.of(context)!.exhibition,
-      AppLocalizations.of(context)!.holiday,
-      AppLocalizations.of(context)!.eating,
-    ];
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
+    eventListProvider=Provider.of<EventListProvider>(context);
+    eventListProvider.getEventNameList(context);
+    // if (eventListProvider.eventsList.isEmpty) {
+    //   eventListProvider.getAllEvent();
+    // }
+
     var languageProvider=Provider.of<AppLanguageProvider>(context);
     var ThemeProvider=Provider.of<AppThemeProvider>(context);    return Scaffold(
       appBar:AppBar(
@@ -115,7 +120,7 @@ class _HomeTapState extends State<HomeTap> {
                     Text(AppLocalizations.of(context)!.egypt,style: AppStyles.regular14White,),
                   ],
                 ),
-                DefaultTabController(length: eventNameList.length,
+                DefaultTabController(length:eventListProvider.eventNameList.length,
                     child:TabBar(
                       indicatorColor: AppColors.transparentColor,
                       dividerColor: AppColors.transparentColor,
@@ -123,13 +128,12 @@ class _HomeTapState extends State<HomeTap> {
                       tabAlignment: TabAlignment.start,
                       isScrollable: true,
                         onTap: (index) {
-                          selectedIndex=index;
-                          setState(() {
-                          });
+                          eventListProvider.changeSelectedIndex(index);
+
                         },
                         tabs:
-                      eventNameList.map((eventName)=>EventTabItem(eventName: eventName,
-                          isSelected: selectedIndex==eventNameList.indexOf(eventName))).toList()
+                        eventListProvider.eventNameList.map((eventName)=>EventTabItem(eventName: eventName,
+                          isSelected:  eventListProvider.selectedIndex==eventListProvider.eventNameList.indexOf(eventName))).toList()
                     )
                 ),
               ],
@@ -139,12 +143,16 @@ class _HomeTapState extends State<HomeTap> {
             onTap:() {
               Navigator.of(context).pushNamed(AppRoutes.eventDetailsScreenRoueNamed,);
             },
-            child: ListView.separated(itemBuilder: (context, index) {
+            child:eventListProvider.filterEventsList.isEmpty?
+            Center(child: Text("no event found",style: Theme.of(context).textTheme.headlineMedium,))
+                :
+            ListView.separated(itemBuilder: (context, index) {
               return Padding(
                 padding:  EdgeInsets.symmetric(horizontal: width*0.02,vertical: height*0.005),
-                child: EventItem(),
+                child: EventItem(event:eventListProvider.filterEventsList[index],),
               );
-            }, separatorBuilder: (context, index) => SizedBox(height: height*0.01), itemCount: 10),
+            }, separatorBuilder: (context, index) => SizedBox(height: height*0.01),
+                itemCount: eventListProvider.filterEventsList.length),
           )
           )
 
@@ -152,4 +160,5 @@ class _HomeTapState extends State<HomeTap> {
       ),
     );
   }
+
 }

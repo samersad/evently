@@ -1,12 +1,15 @@
+import 'package:event_planningapp/model/event.dart';
 import 'package:event_planningapp/utils/app_assets.dart';
 import 'package:event_planningapp/utils/app_colors.dart';
 import 'package:event_planningapp/utils/app_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EventItem extends StatelessWidget {
 
-  const EventItem({super.key});
+   EventItem({super.key,required this.event});
+  final Event event;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,7 @@ class EventItem extends StatelessWidget {
       decoration:BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.primaryLight),
-        image: DecorationImage(image: AssetImage(AppAssets.eventImage),fit: BoxFit.fill)
+        image: DecorationImage(image: AssetImage("${event.eventImage}"),fit: BoxFit.fill)
       ) ,
       child: Padding(
         padding:  EdgeInsets.symmetric(horizontal: width*0.02,vertical: height*0.01),
@@ -33,8 +36,8 @@ class EventItem extends StatelessWidget {
               ) ,
               child: Column(
                 children: [
-                  Text("21",style: AppStyles.bold20primary,),
-                  Text("Nov",style: AppStyles.bold14primary,),
+                  Text("${event.eventDateTime?.day}",style: AppStyles.bold20primary,),
+                  Text(DateFormat("MMM").format(event.eventDateTime!),style: AppStyles.bold14primary,),
                 ],
               )
               ,
@@ -48,7 +51,7 @@ class EventItem extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(child: Text("This is a Birthday Party ",style: Theme.of(context).textTheme.headlineSmall,)),
+                  Expanded(child: Text("${event.title}",style: Theme.of(context).textTheme.headlineSmall,)),
                   Icon(Icons.favorite,color: AppColors.primaryLight,)
                 ],
               )
