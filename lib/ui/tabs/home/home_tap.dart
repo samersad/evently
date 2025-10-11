@@ -45,11 +45,13 @@ class _HomeTapState extends State<HomeTap> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       eventListProvider.getAllEvent();
+      //eventListProvider.deleteEvent(eventId);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
     eventListProvider=Provider.of<EventListProvider>(context);
@@ -139,21 +141,24 @@ class _HomeTapState extends State<HomeTap> {
               ],
             ),
           ),
-          Expanded(child:InkWell(
-            onTap:() {
-              Navigator.of(context).pushNamed(AppRoutes.eventDetailsScreenRoueNamed,);
-            },
-            child:eventListProvider.filterEventsList.isEmpty?
+          Expanded(child:
+          eventListProvider.filterEventsList.isEmpty?
             Center(child: Text("no event found",style: Theme.of(context).textTheme.headlineMedium,))
                 :
             ListView.separated(itemBuilder: (context, index) {
               return Padding(
                 padding:  EdgeInsets.symmetric(horizontal: width*0.02,vertical: height*0.005),
-                child: EventItem(event:eventListProvider.filterEventsList[index],),
+                child: InkWell(onTap: () {
+                        Navigator.of(context).pushNamed(AppRoutes.eventDetailsScreenRoueNamed,
+                            arguments: eventListProvider.filterEventsList[index]
+
+                        );
+                },
+                    child: EventItem(event:eventListProvider.filterEventsList[index],)),
               );
             }, separatorBuilder: (context, index) => SizedBox(height: height*0.01),
                 itemCount: eventListProvider.filterEventsList.length),
-          )
+
           )
 
         ],

@@ -180,7 +180,7 @@ class _CreateEventState extends State<CreateEvent> {
                 SizedBox(height: height*0.01),
                 Text(AppLocalizations.of(context)!.location,style: Theme.of(context).textTheme.labelMedium,),
                 SizedBox(height: height*0.01),
-                CustomElevatedButtom(onPressed: (){},
+                CustomElevatedButtom(onPressed: (){},customPadding: 10,
                  borderColor: AppColors.primaryLight,
                   backgroundColorElevated: AppColors.transparentColor,
                   hasIcon: true,
@@ -283,7 +283,6 @@ class _CreateEventState extends State<CreateEvent> {
               ),
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
             print("Event Successfully");
             Navigator.pop(context);
           }, ).catchError((error) {

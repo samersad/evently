@@ -1,44 +1,32 @@
+import 'package:event_planningapp/provider/event_list_provider.dart';
 import 'package:event_planningapp/utils/app_routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../home_screen/widget/custom_elevated_buttom.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../model/event.dart';
 import '../../../../provider/app_theme_provider.dart';
 import '../../../../utils/app_assets.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_styles.dart';
 
-class EventDetails extends StatelessWidget {
-  const EventDetails({super.key});
+class EventDetails extends StatefulWidget {
+   EventDetails({super.key});
+
+  @override
+  State<EventDetails> createState() => _EventDetailsState();
+}
+
+class _EventDetailsState extends State<EventDetails> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> eventImageListLight=[
-      AppAssets.sportBgLight,
-      AppAssets.birthdayBgLight,
-      AppAssets.meetingBgLight,
-      AppAssets.gamingBgLight,
-      AppAssets.workShopBgLight,
-      AppAssets.bookClubBgLight,
-      AppAssets.exhibitionBgLight,
-      AppAssets.holidayBgLight,
-      AppAssets.eatingBgLight,
-    ];
-    List<String> eventImageListDark=[
-      AppAssets.sportBgDark,
-      AppAssets.birthdayBgDark,
-      AppAssets.meetingBgDark,
-      AppAssets.gamingBgDark,
-      AppAssets.workShopBgDark,
-      AppAssets.bookClubBgDark,
-      AppAssets.exhibitionBgDark,
-      AppAssets.holidayBgDark,
-      AppAssets.eatingBgDark,
-    ];
+    final event = ModalRoute.of(context)!.settings.arguments as Event;
     var providerTheme=Provider.of<AppThemeProvider>(context);
-
+    var eventListProvider=Provider.of<EventListProvider>(context);
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
     return Scaffold(
@@ -50,11 +38,15 @@ class EventDetails extends StatelessWidget {
         actions: [
           InkWell(
             onTap:() {
-              Navigator.of(context).pushNamed(AppRoutes.editEventScreenRoueNamed);
+              Navigator.of(context).pushNamed(AppRoutes.editEventScreenRoueNamed,arguments: event);
             },
               child: Image.asset(AppAssets.editIcon)),
           SizedBox(width: width*0.02,),
-          Image.asset(AppAssets.deleteIcon),
+          InkWell(onTap: ()  {
+            eventListProvider.deleteEvent(event.id!);
+            Navigator.of(context).pop();
+          },
+              child: Image.asset(AppAssets.deleteIcon)),
           SizedBox(width: width*0.02,),
         ],
       ),
@@ -70,13 +62,11 @@ class EventDetails extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Image.asset(providerTheme.appTheme==ThemeMode.light?
-                AppAssets.sportBgLight:
-                AppAssets.sportBgDark
-                ),
+                child: Image.asset(event.eventImage!),
               ),
-              Text("We Are Going To Play Football",style: AppStyles.medium24Primary,),
+              Text(event.title!,style: AppStyles.medium24Primary,),
               CustomElevatedButtom(onPressed: (){},
+                customPadding: 10,
                 borderColor: AppColors.primaryLight,
                 backgroundColorElevated: AppColors.transparentColor,
                 hasIcon: true,
@@ -94,14 +84,15 @@ class EventDetails extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("21 November 2024 ",style: AppStyles.medium16primary,),
-                        Text("12:12PM",style: Theme.of(context).textTheme.labelMedium),
+                        Text(DateFormat("dd MMM yyyy").format(event.eventDateTime!),style: AppStyles.medium16primary,),
+                        Text("${event.eventTime}",style: Theme.of(context).textTheme.labelMedium),
                       ],
                     ),
                   ],
                 ),
               ),
               CustomElevatedButtom(onPressed: (){},
+                customPadding: 10,
                 borderColor: AppColors.primaryLight,
                 backgroundColorElevated: AppColors.transparentColor,
                 hasIcon: true,
@@ -132,16 +123,11 @@ class EventDetails extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: AppColors.primaryLight,width: 2)
                 ),
-                child: Text(""),
+               // child: Text(""),
               ),
               Text(AppLocalizations.of(context)!.description,style: Theme.of(context).textTheme.labelMedium),
-              Text("Lorem ipsum dolor sit amet c"
-                  "onsectetur. Vulputate eleifend suscipit eget neque senectu"
-                  "s a. Nulla at non malesuada odio duis lectus amet nisi sit. Risus hac enim maecenas auc"
-                  "tor et. At cras massa diam port"
-                  "a facilisi lacus purus. Iaculis eget quis ut amet. Sit ac malesuada"
-                  " nisi quis  feugiat.",style: Theme.of(context).textTheme.labelMedium)
-
+              Text(event.description!,style: Theme.of(context).textTheme.labelMedium),
+              SizedBox(height: height*0.2,),
             ],
           ),
         ),
@@ -149,4 +135,6 @@ class EventDetails extends StatelessWidget {
 
     );
   }
+
+
 }

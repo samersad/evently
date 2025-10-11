@@ -1,10 +1,12 @@
 import 'package:event_planningapp/model/event.dart';
+import 'package:event_planningapp/provider/event_list_provider.dart';
 import 'package:event_planningapp/utils/app_assets.dart';
 import 'package:event_planningapp/utils/app_colors.dart';
 import 'package:event_planningapp/utils/app_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class EventItem extends StatelessWidget {
 
@@ -15,6 +17,7 @@ class EventItem extends StatelessWidget {
   Widget build(BuildContext context) {
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
+    var eventListProvider=Provider.of<EventListProvider>(context);
     return Container(
       height:height*0.25 ,
       decoration:BoxDecoration(
@@ -52,7 +55,15 @@ class EventItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(child: Text("${event.title}",style: Theme.of(context).textTheme.headlineSmall,)),
-                  Icon(Icons.favorite,color: AppColors.primaryLight,)
+                  InkWell(onTap:
+                      () {
+                        eventListProvider.updateIsFavoriteEvent(event);
+                      },
+                      child:event.isFavorite==true ?Icon(Icons.favorite,color: AppColors.primaryLight,)
+                  :
+                      Icon(Icons.favorite_border,color: AppColors.primaryLight,)
+
+                  )
                 ],
               )
               ,

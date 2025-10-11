@@ -1,21 +1,43 @@
 import 'package:event_planningapp/l10n/app_localizations.dart';
 import 'package:event_planningapp/utils/app_assets.dart';
 import 'package:event_planningapp/utils/app_colors.dart';
+import 'package:event_planningapp/utils/app_routes.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 import '../../../../utils/app_styles.dart';
 import '../../../home_screen/widget/custom_text_form_field.dart';
+import '../../../provider/event_list_provider.dart';
 import '../home/widget/event_item.dart';
 
-class FavoriteTap extends StatelessWidget {
+class FavoriteTap extends StatefulWidget {
    FavoriteTap({super.key});
-  TextEditingController searchCrl=TextEditingController(text: "");
 
   @override
+  State<FavoriteTap> createState() => _FavoriteTapState();
+}
+
+class _FavoriteTapState extends State<FavoriteTap> {
+  TextEditingController searchCrl=TextEditingController(text: "");
+
+  late EventListProvider eventListProvider;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      eventListProvider.getAllFavoriteEventsFromFirebase();
+    },);
+  }
+   @override
   Widget build(BuildContext context) {
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
+     eventListProvider=Provider.of<EventListProvider>(context);
+
     return SafeArea(
       child: Padding(
         padding:  EdgeInsets.symmetric(horizontal: width*0.02),
@@ -27,10 +49,20 @@ class FavoriteTap extends StatelessWidget {
                 hintText:AppLocalizations.of(context)!.searchForEvent,hintStyle: AppStyles.bold14primary,
               prefixIconName: Image.asset(AppAssets.searchIcon)),
             SizedBox(height: height*0.02,),
-            Expanded(child:  ListView.separated(itemBuilder: (context, index) {
-          return Container();
-        }, separatorBuilder: (context, index) => SizedBox(height: height*0.01), itemCount: 10))
-      
+            Expanded(child:eventListProvider.eventsFavoriteList.isEmpty?
+                Center(child: Text("no Favorite Founded ",style: Theme.of(context).textTheme.headlineMedium,))
+                :
+            ListView.separated(itemBuilder: (context, index) {
+          return InkWell(onTap: () {
+            Navigator.of(context).pushNamed(AppRoutes.eventDetailsScreenRoueNamed,
+                arguments: eventListProvider.eventsFavoriteList[index]
+
+            );
+          },
+              child: EventItem(event: eventListProvider.eventsFavoriteList[index]));
+        }, separatorBuilder: (context, index) => SizedBox(height: height*0.01),
+                itemCount: eventListProvider.eventsFavoriteList.length))
+
         ],
         ),
       ),
