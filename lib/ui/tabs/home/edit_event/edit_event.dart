@@ -278,7 +278,7 @@ class _CreateEventState extends State<EditEvent> {
         eventTime: formatTime ?? event!.eventTime,
         isFavorite: event!.isFavorite,
       );
-
+//
       eventListProvider.updateEventInFirestore(updatedEvent);
         // Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreenRouteNamed);
       Navigator.pushNamedAndRemoveUntil(
