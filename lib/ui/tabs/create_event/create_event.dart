@@ -15,8 +15,6 @@ import 'package:provider/provider.dart';
 import '../../../l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../../provider/event_list_provider.dart';
-
 class CreateEvent extends StatefulWidget {
    CreateEvent({super.key});
 
@@ -32,7 +30,6 @@ class _CreateEventState extends State<CreateEvent> {
   int selectedIndex=0;
   String selectedEventImage="";
   String selectedEventName="";
-  late EventListProvider eventListProvider;
   TextEditingController eventTitleCRl=TextEditingController(text: "");
   TextEditingController descriptionCRl=TextEditingController(text: "");
   var formkey=GlobalKey<FormState>();
@@ -79,9 +76,6 @@ class _CreateEventState extends State<CreateEvent> {
     var providerTheme=Provider.of<AppThemeProvider>(context);
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
-     eventListProvider=Provider.of<EventListProvider>(context);
-    selectedEventName = eventNameList[selectedIndex];
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.transparentColor,
@@ -103,9 +97,9 @@ class _CreateEventState extends State<CreateEvent> {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child:providerTheme.appTheme==ThemeMode.light ?
-                Image.asset( selectedEventImage= eventImageListLight[selectedIndex],fit: BoxFit.fill,)
+                Image.asset(eventImageListLight[selectedIndex],fit: BoxFit.fill,)
                     :
-                Image.asset(selectedEventImage=eventImageListDark[selectedIndex],fit: BoxFit.fill)
+                Image.asset(eventImageListDark[selectedIndex],fit: BoxFit.fill)
               ),
                 SizedBox(height: height*0.005),
               SizedBox(
@@ -271,13 +265,13 @@ class _CreateEventState extends State<CreateEvent> {
         //todo alert dialog - tasat - snack bar
             final snackBar = SnackBar(
               behavior: SnackBarBehavior.floating,
-              elevation: 6,
+              elevation: 6, // ظل خفيف
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
 
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              duration: Duration(seconds: 2),
+              duration: Duration(seconds: 20),
               content:
               Text('Event Added'),backgroundColor: AppColors.primaryLight,
               action: SnackBarAction(
@@ -290,17 +284,27 @@ class _CreateEventState extends State<CreateEvent> {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             print("Event Successfully");
-            //todo refresh list to get last event added
             Navigator.pop(context);
           }, ).catchError((error) {
+        print("Error: $error");
       }
-      );
-    }
-  }
-  @override
-  void dispose(){
-    super.dispose();
-    eventListProvider.getAllEvent();
+      );    }
+    setState(() {
+    });
   }
 }
 
+/*
+            final snackBar = SnackBar(
+              content: const Text('Yay! A SnackBar!'),
+              action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () {
+                  // Some code to undo the change.
+                },
+              ),
+            );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+
+ */
