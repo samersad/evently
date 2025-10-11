@@ -66,7 +66,7 @@ class EventListProvider extends ChangeNotifier{
   }
   void changeSelectedIndex(int newSelectedIndex){
     selectedIndex=newSelectedIndex;
-    selectedIndex == 0? getAllEvent() : getFilterFromFireStore();
+    selectedIndex == 0? getAllEvent() : getFilterEvents();
   }
 
   Future<void> updateIsFavoriteEvent(Event event) async {
@@ -77,7 +77,7 @@ class EventListProvider extends ChangeNotifier{
           backgroundColor: AppColors.greenColor, textColor: AppColors.whiteColor);
     },);
     getAllFavoriteEvents();
-    selectedIndex == 0? getAllEvent() : getFilterFromFireStore();
+    selectedIndex == 0? getAllEvent() : getFilterEvents();
     notifyListeners();
   }
   Future<void> getAllFavoriteEvents() async {
