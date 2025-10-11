@@ -80,6 +80,7 @@ class _CreateEventState extends State<CreateEvent> {
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
      eventListProvider=Provider.of<EventListProvider>(context);
+    selectedEventName = eventNameList[selectedIndex];
 
     return Scaffold(
       appBar: AppBar(
@@ -114,7 +115,6 @@ class _CreateEventState extends State<CreateEvent> {
                       return InkWell(
                       onTap:() {
                         selectedIndex=index;
-                        selectedEventName = eventNameList[index];
                         setState(() {
                         });
                       },
@@ -186,7 +186,7 @@ class _CreateEventState extends State<CreateEvent> {
                 SizedBox(height: height*0.01),
                 Text(AppLocalizations.of(context)!.location,style: Theme.of(context).textTheme.labelMedium,),
                 SizedBox(height: height*0.01),
-                CustomElevatedButtom(onPressed: (){},
+                CustomElevatedButtom(onPressed: (){},customPadding: 10,
                  borderColor: AppColors.primaryLight,
                   backgroundColorElevated: AppColors.transparentColor,
                   hasIcon: true,
@@ -289,7 +289,6 @@ class _CreateEventState extends State<CreateEvent> {
               ),
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
             print("Event Successfully");
             //todo refresh list to get last event added
             Navigator.pop(context);
