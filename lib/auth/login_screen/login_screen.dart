@@ -4,6 +4,7 @@ import 'package:event_planningapp/utils/app_assets.dart';
 import 'package:event_planningapp/utils/app_colors.dart';
 import 'package:event_planningapp/utils/app_routes.dart';
 import 'package:event_planningapp/utils/app_styles.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -150,11 +151,24 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void login() {
+  Future<void> login() async {
     if (formkey.currentState?.validate() == true) {
-      Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreenRouteNamed);
-    }  
-    
+      try {
+        final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: emailCtrl.text,
+            password: passwordCtrl.text
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          print('Wrong password provided for that user.');
+        }
+      }
+    }
+    Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreenRouteNamed);
+
+
   }
 
   void loginWithGoogle() {

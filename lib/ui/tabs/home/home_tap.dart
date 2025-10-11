@@ -19,7 +19,7 @@ import '../../../provider/event_list_provider.dart';
 
 
 class HomeTap extends StatefulWidget {
-   HomeTap({super.key});
+  HomeTap({super.key});
 
   @override
   State<HomeTap> createState() => _HomeTapState();
@@ -35,11 +35,11 @@ class _HomeTapState extends State<HomeTap> {
     Icons.handyman,
     Icons.auto_stories,
     Icons.museum,
-     Icons.flight,
+    Icons.flight,
     Icons.fastfood,
   ];
 
-   late EventListProvider eventListProvider;
+  late EventListProvider eventListProvider;
   @override
   void initState() {
     super.initState();
@@ -70,8 +70,8 @@ class _HomeTapState extends State<HomeTap> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                   Text(AppLocalizations.of(context)!.welcomeBack,style: AppStyles.regular14White,),
-                   Text(AppLocalizations.of(context)!.johnSafwat,style: AppStyles.bold24white,),
+                Text(AppLocalizations.of(context)!.welcomeBack,style: AppStyles.regular14White,),
+                Text(AppLocalizations.of(context)!.johnSafwat,style: AppStyles.bold24white,),
               ],
             ),
             Spacer(),
@@ -80,27 +80,27 @@ class _HomeTapState extends State<HomeTap> {
                 :
             AppColors.offWhiteColor ,),
             Container(
-            //  height: height*0.02,
+              //  height: height*0.02,
               padding: EdgeInsets.symmetric(vertical: height*0.008,horizontal: width*0.02),
               margin: EdgeInsetsDirectional.only(start: 16),
-                decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: ThemeProvider.appTheme==ThemeMode.light ?
-                    AppColors.whiteColor
-                    :
-                    AppColors.offWhiteColor
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: ThemeProvider.appTheme==ThemeMode.light ?
+                  AppColors.whiteColor
+                      :
+                  AppColors.offWhiteColor
               ),
               child: Text(languageProvider.appLanguage=="en" ?
-                  "En"
+              "En"
                   :
-                "Ar"
-                ,
+              "Ar"
+                  ,
 
-                style: Theme.of(context).textTheme.displaySmall),
+                  style: Theme.of(context).textTheme.displaySmall),
             )
           ],
         ),
-        ),
+      ),
       body:
       Column(
         children: [
@@ -108,8 +108,8 @@ class _HomeTapState extends State<HomeTap> {
             padding: EdgeInsets.symmetric(horizontal: width*0.02,vertical: height*0.01),
             height: height*0.14,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(24),bottomRight: Radius.circular(24),),
-              color: Theme.of(context).primaryColor
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(24),bottomRight: Radius.circular(24),),
+                color: Theme.of(context).primaryColor
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,18 +124,18 @@ class _HomeTapState extends State<HomeTap> {
                 ),
                 DefaultTabController(length:eventListProvider.eventNameList.length,
                     child:TabBar(
-                      indicatorColor: AppColors.transparentColor,
-                      dividerColor: AppColors.transparentColor,
-                      labelPadding: EdgeInsets.zero,
-                      tabAlignment: TabAlignment.start,
-                      isScrollable: true,
+                        indicatorColor: AppColors.transparentColor,
+                        dividerColor: AppColors.transparentColor,
+                        labelPadding: EdgeInsets.zero,
+                        tabAlignment: TabAlignment.start,
+                        isScrollable: true,
                         onTap: (index) {
                           eventListProvider.changeSelectedIndex(index);
 
                         },
                         tabs:
                         eventListProvider.eventNameList.map((eventName)=>EventTabItem(eventName: eventName,
-                          isSelected:  eventListProvider.selectedIndex==eventListProvider.eventNameList.indexOf(eventName))).toList()
+                            isSelected:  eventListProvider.selectedIndex==eventListProvider.eventNameList.indexOf(eventName))).toList()
                     )
                 ),
               ],
@@ -143,21 +143,21 @@ class _HomeTapState extends State<HomeTap> {
           ),
           Expanded(child:
           eventListProvider.filterEventsList.isEmpty?
-            Center(child: Text("no event found",style: Theme.of(context).textTheme.headlineMedium,))
-                :
-            ListView.separated(itemBuilder: (context, index) {
-              return Padding(
-                padding:  EdgeInsets.symmetric(horizontal: width*0.02,vertical: height*0.005),
-                child: InkWell(onTap: () {
-                        Navigator.of(context).pushNamed(AppRoutes.eventDetailsScreenRoueNamed,
-                            arguments: eventListProvider.filterEventsList[index]
+          Center(child: Text("no event found",style: Theme.of(context).textTheme.headlineMedium,))
+              :
+          ListView.separated(itemBuilder: (context, index) {
+            return Padding(
+              padding:  EdgeInsets.symmetric(horizontal: width*0.02,vertical: height*0.005),
+              child: InkWell(onTap: () {
+                Navigator.of(context).pushNamed(AppRoutes.eventDetailsScreenRoueNamed,
+                    arguments: eventListProvider.filterEventsList[index]
 
-                        );
-                },
-                    child: EventItem(event:eventListProvider.filterEventsList[index],)),
-              );
-            }, separatorBuilder: (context, index) => SizedBox(height: height*0.01),
-                itemCount: eventListProvider.filterEventsList.length),
+                );
+              },
+                  child: EventItem(event:eventListProvider.filterEventsList[index],)),
+            );
+          }, separatorBuilder: (context, index) => SizedBox(height: height*0.01),
+              itemCount: eventListProvider.filterEventsList.length),
 
           )
 
