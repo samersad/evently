@@ -39,7 +39,7 @@ class _CreateEventState extends State<CreateEvent> {
   TimeOfDay? selectedTime ;
   String? formatDate;
   String? formatTime;
- late EventListProvider eventListProvider;
+  late EventListProvider eventListProvider;
   @override
   Widget build(BuildContext context) {
     List<String> eventNameList=[
@@ -77,6 +77,9 @@ class _CreateEventState extends State<CreateEvent> {
     ];
     var providerTheme=Provider.of<AppThemeProvider>(context);
     eventListProvider=Provider.of<EventListProvider>(context);
+    selectedEventName = eventNameList[selectedIndex];
+
+
 
 
     var width=MediaQuery.of(context).size.width ;
@@ -117,7 +120,7 @@ class _CreateEventState extends State<CreateEvent> {
                               setState(() {
                               });
                             },
-                            child: CreateEventTabItem(eventName: selectedEventName=eventNameList[index], isSelected: selectedIndex==index ));
+                            child: CreateEventTabItem(eventName: eventNameList[index], isSelected: selectedIndex==index ));
                       }
                       , separatorBuilder: (context, index) {
                         return SizedBox(width: width*0.02,);
@@ -300,7 +303,7 @@ class _CreateEventState extends State<CreateEvent> {
   @override
   void dispose(){
     super.dispose();
-  eventListProvider.getAllEvent();
+    eventListProvider.getAllEvent();
 
   }
 }
