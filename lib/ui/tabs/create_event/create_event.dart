@@ -15,8 +15,10 @@ import 'package:provider/provider.dart';
 import '../../../l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../provider/event_list_provider.dart';
+
 class CreateEvent extends StatefulWidget {
-   CreateEvent({super.key});
+  CreateEvent({super.key});
 
 
   @override
@@ -37,7 +39,7 @@ class _CreateEventState extends State<CreateEvent> {
   TimeOfDay? selectedTime ;
   String? formatDate;
   String? formatTime;
-
+ late EventListProvider eventListProvider;
   @override
   Widget build(BuildContext context) {
     List<String> eventNameList=[
@@ -74,6 +76,9 @@ class _CreateEventState extends State<CreateEvent> {
       AppAssets.eatingBgDark,
     ];
     var providerTheme=Provider.of<AppThemeProvider>(context);
+    eventListProvider=Provider.of<EventListProvider>(context);
+
+
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
     return Scaffold(
@@ -91,35 +96,35 @@ class _CreateEventState extends State<CreateEvent> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-              Container(
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
+                Container(
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child:providerTheme.appTheme==ThemeMode.light ?
+                    Image.asset(selectedEventImage=eventImageListLight[selectedIndex],fit: BoxFit.fill,)
+                        :
+                    Image.asset(selectedEventImage=eventImageListDark[selectedIndex],fit: BoxFit.fill)
                 ),
-                child:providerTheme.appTheme==ThemeMode.light ?
-                Image.asset(eventImageListLight[selectedIndex],fit: BoxFit.fill,)
-                    :
-                Image.asset(eventImageListDark[selectedIndex],fit: BoxFit.fill)
-              ),
                 SizedBox(height: height*0.005),
-              SizedBox(
-                height: height*0.07,
-                child: ListView.separated(scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                      onTap:() {
-                        selectedIndex=index;
-                        setState(() {
-                        });
-                      },
-                      child: CreateEventTabItem(eventName: eventNameList[index], isSelected: selectedIndex==index ));
-                }
-                    , separatorBuilder: (context, index) {
-                      return SizedBox(width: width*0.02,);
-                    }
-                    , itemCount:eventNameList.length
+                SizedBox(
+                  height: height*0.07,
+                  child: ListView.separated(scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                            onTap:() {
+                              selectedIndex=index;
+                              setState(() {
+                              });
+                            },
+                            child: CreateEventTabItem(eventName: selectedEventName=eventNameList[index], isSelected: selectedIndex==index ));
+                      }
+                      , separatorBuilder: (context, index) {
+                        return SizedBox(width: width*0.02,);
+                      }
+                      , itemCount:eventNameList.length
+                  ),
                 ),
-              ),
                 SizedBox(height: height*0.005),
                 Text(AppLocalizations.of(context)!.title,style: Theme.of(context).textTheme.labelMedium,),
                 SizedBox(height: height*0.005),
@@ -154,24 +159,24 @@ class _CreateEventState extends State<CreateEvent> {
                       :
                   formatDate!,
 
-                    error: dateError!=null ?
-                    Text(dateError!, style: AppStyles.medium12Red )
-                  :null ,
-                    onPressed: () {
-                  chooseDate();
+                  error: dateError!=null ?
+                  Text(dateError!, style: AppStyles.medium12Red )
+                      :null ,
+                  onPressed: () {
+                    chooseDate();
 
-                } ,
+                  } ,
                 ),
 
                 DateOrTimeWidget(iconName: AppAssets.timeIcon,eventDateOrTime: AppLocalizations.of(context)!.eventTime,
 
                     chooseDateOrTime:selectedTime == null ?AppLocalizations.of(context)!.chooseTime
                         :
-                        formatTime!,
+                    formatTime!,
 
                     error: timeError!=null ? Text(timeError!,style:AppStyles.medium12Red )
-                    :
-                        null
+                        :
+                    null
                     ,
                     onPressed: () {
                       chooseTime();
@@ -181,7 +186,7 @@ class _CreateEventState extends State<CreateEvent> {
                 Text(AppLocalizations.of(context)!.location,style: Theme.of(context).textTheme.labelMedium,),
                 SizedBox(height: height*0.01),
                 CustomElevatedButtom(onPressed: (){},customPadding: 10,
-                 borderColor: AppColors.primaryLight,
+                  borderColor: AppColors.primaryLight,
                   backgroundColorElevated: AppColors.transparentColor,
                   hasIcon: true,
                   childIconWidget: Row(
@@ -190,10 +195,10 @@ class _CreateEventState extends State<CreateEvent> {
                         padding: EdgeInsets.symmetric(horizontal: width*0.04,vertical: height*0.02),
                         margin: EdgeInsetsDirectional.only(start: width*0.04),
                         decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: AppColors.primaryLight
-                      ),
-                      child: Image.asset(AppAssets.locationIcon,color: Theme.of(context).disabledColor),),
+                            borderRadius: BorderRadius.circular(8),
+                            color: AppColors.primaryLight
+                        ),
+                        child: Image.asset(AppAssets.locationIcon,color: Theme.of(context).disabledColor),),
                       SizedBox(width: width*0.02,),
                       Text(AppLocalizations.of(context)!.chooseEventLocation,style: AppStyles.medium16primary,),
                       Spacer(),
@@ -210,9 +215,9 @@ class _CreateEventState extends State<CreateEvent> {
                   addEvent();
                 },
                   borderColor: AppColors.primaryLight,
-                    text: AppLocalizations.of(context)!.addEvent,
+                  text: AppLocalizations.of(context)!.addEvent,
                   textStyle: AppStyles.medium20white,
-                       ),
+                ),
               ],
             ),
           ),
@@ -222,9 +227,9 @@ class _CreateEventState extends State<CreateEvent> {
   }
   Future<void> chooseDate() async {
     var chooseDate=await showDatePicker(context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
-        lastDate: DateTime.now().add(Duration(days: 365)),
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
     );
     selectedDate=chooseDate;
     if (selectedDate!=null) {
@@ -243,7 +248,7 @@ class _CreateEventState extends State<CreateEvent> {
     if (selectedTime!=null) {
       formatTime=selectedTime!.format(context);
 
-    }  
+    }
     setState(() {
 
     });
@@ -261,36 +266,42 @@ class _CreateEventState extends State<CreateEvent> {
           eventTime:formatTime
       );
       FireBaseUtils.addEventToFirestore(event).timeout(Duration(seconds: 1),
-          onTimeout:() {
-        //todo alert dialog - tasat - snack bar
-            final snackBar = SnackBar(
-              behavior: SnackBarBehavior.floating,
-              elevation: 6, // ظل خفيف
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        onTimeout:() {
+          //todo alert dialog - tasat - snack bar
+          final snackBar = SnackBar(
+            behavior: SnackBarBehavior.floating,
+            elevation: 6, // ظل خفيف
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
 
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              duration: Duration(seconds: 20),
-              content:
-              Text('Event Added'),backgroundColor: AppColors.primaryLight,
-              action: SnackBarAction(
-                textColor: AppColors.primaryLight,
-                label: 'Close' ,backgroundColor: AppColors.whiteColor,
-                onPressed: () {
-                  // Some code to undo the change.
-                },
-              ),
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            print("Event Successfully");
-            Navigator.pop(context);
-          }, ).catchError((error) {
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            duration: Duration(seconds: 20),
+            content:
+            Text('Event Added'),backgroundColor: AppColors.primaryLight,
+            action: SnackBarAction(
+              textColor: AppColors.primaryLight,
+              label: 'Close' ,backgroundColor: AppColors.whiteColor,
+              onPressed: () {
+                // Some code to undo the change.
+              },
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          print("Event Successfully");
+          Navigator.pop(context);
+        }, ).catchError((error) {
         print("Error: $error");
       }
       );    }
     setState(() {
     });
+  }
+  @override
+  void dispose(){
+    super.dispose();
+  eventListProvider.getAllEvent();
+
   }
 }
 

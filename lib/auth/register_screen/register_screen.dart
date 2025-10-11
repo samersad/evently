@@ -3,6 +3,7 @@ import 'package:event_planningapp/utils/app_assets.dart';
 import 'package:event_planningapp/utils/app_colors.dart';
 import 'package:event_planningapp/utils/app_routes.dart';
 import 'package:event_planningapp/utils/app_styles.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -115,7 +116,7 @@ class _LoginScreenState extends State<RegisterScreen> {
                     prefixIconName:Image.asset(AppAssets.passwordIcon,color: Theme.of(context).highlightColor,),
                       suffixIconName:Image.asset(AppAssets.showPassIcon,color: Theme.of(context).highlightColor,)),
 
-                  CustomElevatedButtom(text: "${AppLocalizations.of(context)!.create_account}",onPressed: createAccount,),
+                  CustomElevatedButtom(text: "${AppLocalizations.of(context)!.create_account}",onPressed: register,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -137,9 +138,22 @@ class _LoginScreenState extends State<RegisterScreen> {
     );
   }
 
-  void createAccount() {
+  Future<void> register() async {
     if (formkey.currentState?.validate()==true) {
-      Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homeScreenRouteNamed,(route) => false,);
+      try {
+        final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailCtrl.text,
+          password: passwordCtrl.text,
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+        }
+      } catch (e) {
+        print(e);
+      }
     }
   }
 }
