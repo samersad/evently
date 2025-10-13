@@ -284,8 +284,9 @@ class _CreateEventState extends State<EditEvent> {
       Navigator.pushNamedAndRemoveUntil(
         context,
         AppRoutes.homeScreenRouteNamed,
-            (route) => route.isFirst,
+            (route) => false,
       );
+
 
     }
   }

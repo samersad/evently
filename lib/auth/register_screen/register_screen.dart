@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import '../../home_screen/widget/custom_elevated_buttom.dart';
 import '../../home_screen/widget/toggle_switch_language.dart';
 import '../../l10n/app_localizations.dart';
+import '../../utils/alert_dialog.dart';
 class RegisterScreen extends StatefulWidget {
   RegisterScreen({super.key});
 
@@ -140,20 +141,35 @@ class _LoginScreenState extends State<RegisterScreen> {
 
   Future<void> register() async {
     if (formkey.currentState?.validate()==true) {
+      AlertDialogUtils.showLoading(context: context, msg: "loading");
       try {
         final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailCtrl.text,
           password: passwordCtrl.text,
         );
-      } on FirebaseAuthException catch (e) {
+        AlertDialogUtils.hideLoading(context: context);
+        AlertDialogUtils.showMessage(context: context, msg: "register Successfully",title: "Success",
+            pos: "ok",posAction: (){
+              Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homeScreenRouteNamed,
+                  (route)=>false);
+            },
+            nav: "dismiss",navAction: (){
+             Navigator.pop(context);
+            }
+        );
+
+      }
+      on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
-          print('The password provided is too weak.');
+          AlertDialogUtils.hideLoading(context: context);
+          AlertDialogUtils.showMessage(context: context, msg: "weak-password",title: "error",);
         } else if (e.code == 'email-already-in-use') {
-          print('The account already exists for that email.');
+          AlertDialogUtils.hideLoading(context: context);
+          AlertDialogUtils.showMessage(context: context, msg: "email-already-in-use",title: "error",);
         }
       } catch (e) {
-        print(e);
-      }
+        AlertDialogUtils.hideLoading(context: context);
+        AlertDialogUtils.showMessage(context: context, msg: e.toString(),title: "error",);      }
     }
   }
 }

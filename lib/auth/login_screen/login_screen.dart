@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 import '../../home_screen/widget/custom_elevated_buttom.dart';
 import '../../home_screen/widget/toggle_switch_language.dart';
+import '../../utils/alert_dialog.dart';
 class LoginScreen extends StatefulWidget {
    LoginScreen({super.key});
 
@@ -153,20 +154,34 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> login() async {
     if (formkey.currentState?.validate() == true) {
+      AlertDialogUtils.showLoading(context: context, msg: "loading .....");
       try {
         final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: emailCtrl.text,
             password: passwordCtrl.text
         );
+        AlertDialogUtils.hideLoading(context: context);
+        AlertDialogUtils.showMessage(context: context, msg: "Login Successfully",title: "Success",
+            pos: "ok",posAction: (){
+              Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homeScreenRouteNamed,
+                      (route)=>false);
+            },
+            nav: "dismiss",navAction: (){
+              Navigator.pop(context);
+            }
+            );
       } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          print('Wrong password provided for that user.');
+        if (e.code == 'invalid-credential') {
+          AlertDialogUtils.hideLoading(context: context);
+          AlertDialogUtils.showMessage(context: context,
+            msg: "'No user found for that email or wrong password'",title: "error",);
         }
       }
+      catch(e){
+        print(e.toString());
+      }
     }
-    Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreenRouteNamed);
+   // Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreenRouteNamed);
 
 
   }

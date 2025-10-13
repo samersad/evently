@@ -223,7 +223,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseChooseTime => 'Please Choose Time';
 
   @override
-  String get eventDetails => 'EventDetails';
+  String get eventDetails => 'Event Details';
 
   @override
   String get editEvent => 'Edit Event';

@@ -521,7 +521,7 @@ abstract class AppLocalizations {
   /// No description provided for @eventDetails.
   ///
   /// In en, this message translates to:
-  /// **'EventDetails'**
+  /// **'Event Details'**
   String get eventDetails;
 
   /// No description provided for @editEvent.

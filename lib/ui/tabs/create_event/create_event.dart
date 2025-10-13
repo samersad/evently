@@ -279,7 +279,7 @@ class _CreateEventState extends State<CreateEvent> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            duration: Duration(seconds: 20),
+            duration: Duration(seconds: 1),
             content:
             Text('Event Added'),backgroundColor: AppColors.primaryLight,
             action: SnackBarAction(

@@ -33,7 +33,7 @@ class _EventDetailsState extends State<EventDetails> {
       appBar: AppBar(
         backgroundColor: AppColors.transparentColor,
         foregroundColor: AppColors.primaryLight,
-        title: Text(AppLocalizations.of(context)!.createEvent,style: AppStyles.bold20primary,),
+        title: Text(AppLocalizations.of(context)!.eventDetails,style: AppStyles.bold20primary,),
         centerTitle: true,
         actions: [
           InkWell(
