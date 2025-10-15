@@ -1,15 +1,21 @@
+import 'package:event_planningapp/firebase_utils.dart';
 import 'package:event_planningapp/home_screen/widget/custom_text_form_field.dart';
+import 'package:event_planningapp/model/my_user.dart';
 import 'package:event_planningapp/utils/app_assets.dart';
 import 'package:event_planningapp/utils/app_colors.dart';
 import 'package:event_planningapp/utils/app_routes.dart';
 import 'package:event_planningapp/utils/app_styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../home_screen/widget/custom_elevated_buttom.dart';
 import '../../home_screen/widget/toggle_switch_language.dart';
 import '../../l10n/app_localizations.dart';
+import '../../provider/event_list_provider.dart';
+import '../../provider/user_provider.dart';
 import '../../utils/alert_dialog.dart';
 class RegisterScreen extends StatefulWidget {
   RegisterScreen({super.key});
@@ -147,6 +153,16 @@ class _LoginScreenState extends State<RegisterScreen> {
           email: emailCtrl.text,
           password: passwordCtrl.text,
         );
+
+        MyUser myUser=MyUser(id: credential.user?.uid ?? "",
+            name: nameCtrl.text,
+            email: emailCtrl.text);
+       await  FireBaseUtils.addUserToFirestore(myUser);
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        final eventProvider = Provider.of<EventListProvider>(context, listen: false);
+        userProvider.updateUser(myUser);
+        eventProvider.changeSelectedIndex(0, userProvider.currentUser!.id);
+        eventProvider.getAllFavoriteEvents(userProvider.currentUser!.id);
         AlertDialogUtils.hideLoading(context: context);
         AlertDialogUtils.showMessage(context: context, msg: "register Successfully",title: "Success",
             pos: "ok",posAction: (){

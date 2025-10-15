@@ -10,10 +10,12 @@ import 'package:provider/provider.dart';
 import '../../../../utils/app_styles.dart';
 import '../../../home_screen/widget/custom_text_form_field.dart';
 import '../../../provider/event_list_provider.dart';
+import '../../../provider/user_provider.dart';
 import '../home/widget/event_item.dart';
 
 class FavoriteTap extends StatefulWidget {
    FavoriteTap({super.key});
+   late UserProvider userProvider;
 
   @override
   State<FavoriteTap> createState() => _FavoriteTapState();
@@ -23,13 +25,15 @@ class _FavoriteTapState extends State<FavoriteTap> {
   TextEditingController searchCrl=TextEditingController(text: "");
 
   late EventListProvider eventListProvider;
+  late UserProvider userProvider;
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      eventListProvider.getAllFavoriteEventsFromFirebase();
+      eventListProvider.getAllFavoriteEventsFromFirebase(userProvider.currentUser!.id);
     },);
   }
    @override
@@ -37,6 +41,7 @@ class _FavoriteTapState extends State<FavoriteTap> {
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
      eventListProvider=Provider.of<EventListProvider>(context);
+    userProvider=Provider.of<UserProvider>(context);
 
     return SafeArea(
       child: Padding(

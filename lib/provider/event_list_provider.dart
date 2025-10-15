@@ -28,9 +28,9 @@ class EventListProvider extends ChangeNotifier{
       AppLocalizations.of(context)!.eating,
     ];
   }
-  Future<void> getAllEvent() async {
+  Future<void> getAllEvent(String uId) async {
     //get all events in List
-    QuerySnapshot<Event> querySnapshot= await FireBaseUtils.getEventCollections().get();
+    QuerySnapshot<Event> querySnapshot= await FireBaseUtils.getEventCollections(uId).get();
     eventsList= querySnapshot.docs.map((doc) {
       return doc.data();
     }, ).toList();
@@ -41,8 +41,8 @@ class EventListProvider extends ChangeNotifier{
     },);
     notifyListeners();
   }
-  void getFilterEvents()async{
-    var querySnapshot =await FireBaseUtils.getEventCollections().get();
+  void getFilterEvents(String uId)async{
+    var querySnapshot =await FireBaseUtils.getEventCollections( uId).get();
     eventsList= querySnapshot.docs.map((doc) {
       return doc.data();
     },).toList();
@@ -55,8 +55,8 @@ class EventListProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> getFilterFromFireStore() async {
-    var querySnapshot= await FireBaseUtils.getEventCollections().
+  Future<void> getFilterFromFireStore(String uId) async {
+    var querySnapshot= await FireBaseUtils.getEventCollections(uId).
     orderBy("event_date_time").
     where("event_name",isEqualTo: eventNameList[selectedIndex]).get();
     filterEventsList = querySnapshot.docs.map((doc) {
@@ -64,24 +64,24 @@ class EventListProvider extends ChangeNotifier{
     },).toList();
     notifyListeners();
   }
-  void changeSelectedIndex(int newSelectedIndex){
+  void changeSelectedIndex(int newSelectedIndex,String uId){
     selectedIndex=newSelectedIndex;
-    selectedIndex == 0? getAllEvent() : getFilterEvents();
+    selectedIndex == 0? getAllEvent( uId) : getFilterEvents(uId);
   }
 
-  Future<void> updateIsFavoriteEvent(Event event) async {
-    await FireBaseUtils.getEventCollections().doc(event.id)
-        .update({"is_favorite":!event.isFavorite!}).timeout(Duration(microseconds: 1),onTimeout:
-        () {
+  Future<void> updateIsFavoriteEvent(Event event,String uId) async {
+    await FireBaseUtils.getEventCollections( uId).doc(event.id)
+        .update({"is_favorite":!event.isFavorite!}).then((value) {
       FlutterToast.showToastMes(msg: "event updated successfully",
           backgroundColor: AppColors.greenColor, textColor: AppColors.whiteColor);
-    },);
-    getAllFavoriteEvents();
-    selectedIndex == 0? getAllEvent() : getFilterEvents();
+        },);
+    getAllFavoriteEvents( uId);
+
+    selectedIndex == 0? getAllEvent( uId) : getFilterEvents( uId);
     notifyListeners();
   }
-  Future<void> getAllFavoriteEvents() async {
-    var querySnapshot=await FireBaseUtils.getEventCollections().get();
+  Future<void> getAllFavoriteEvents(String uId) async {
+    var querySnapshot=await FireBaseUtils.getEventCollections( uId).get();
     eventsList=querySnapshot.docs.map((doc) {
       return doc.data();
     },).toList();
@@ -93,8 +93,8 @@ class EventListProvider extends ChangeNotifier{
     },);
     notifyListeners();
   }
-  Future<void> getAllFavoriteEventsFromFirebase() async {
-    var querySnapshot=await FireBaseUtils.getEventCollections()
+  Future<void> getAllFavoriteEventsFromFirebase(String uId) async {
+    var querySnapshot=await FireBaseUtils.getEventCollections( uId)
         .orderBy("event_date_time")
         .where("is_favorite",isEqualTo: true)
         .get();
@@ -106,13 +106,12 @@ class EventListProvider extends ChangeNotifier{
   }
 
 
-  Future<void> deleteEvent(String eventId) async {
-    await FireBaseUtils.getEventCollections().doc(eventId).delete().
-    timeout(Duration(microseconds: 1),onTimeout:
-        () {
-      FlutterToast.showToastMes(msg: "event deleted successfully", backgroundColor: AppColors.redColor, textColor: AppColors.whiteColor);
-
+  Future<void> deleteEvent(String eventId,String uId) async {
+    await FireBaseUtils.getEventCollections( uId).doc(eventId).delete().then((value) {
+      FlutterToast.showToastMes(msg: "event updated successfully",
+          backgroundColor: AppColors.greenColor, textColor: AppColors.whiteColor);
     },);
+
     eventsList.removeWhere((event) => event.id == eventId);
     filterEventsList.removeWhere((event) => event.id == eventId);
     eventsFavoriteList.removeWhere((event) => event.id == eventId);
@@ -121,9 +120,9 @@ class EventListProvider extends ChangeNotifier{
 
   }
 
-  Future<void> updateEventInFirestore(Event event) async {
-    FireBaseUtils.getEventCollections().doc(event.id)
-        .update(event.toFireStore()).timeout(Duration(microseconds: 1),onTimeout: () {
+  Future<void> updateEventInFirestore(Event event,String uId) async {
+    FireBaseUtils.getEventCollections( uId).doc(event.id)
+        .update(event.toFireStore()).then((value) {
       FlutterToast.showToastMes(msg: "event updated successfully", backgroundColor: AppColors.greenColor, textColor: AppColors.whiteColor);
 
     },);

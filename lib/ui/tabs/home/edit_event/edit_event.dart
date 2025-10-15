@@ -15,6 +15,7 @@ import '../../../../firebase_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../model/event.dart';
 import '../../../../provider/event_list_provider.dart';
+import '../../../../provider/user_provider.dart';
 
 
 class EditEvent extends StatefulWidget {
@@ -40,6 +41,8 @@ class _CreateEventState extends State<EditEvent> {
   late List<String> eventImageListLight;
   late List<String> eventImageListDark;
   late EventListProvider eventListProvider;
+  late UserProvider userProvider;
+
 
   @override
   void didChangeDependencies() {
@@ -98,6 +101,8 @@ class _CreateEventState extends State<EditEvent> {
    // final event = ModalRoute.of(context)!.settings.arguments as Event;
     var providerTheme=Provider.of<AppThemeProvider>(context);
     eventListProvider=Provider.of<EventListProvider>(context);
+    userProvider=Provider.of<UserProvider>(context);
+
 
     selectedEventName = eventNameList[selectedIndex];
 
@@ -279,7 +284,7 @@ class _CreateEventState extends State<EditEvent> {
         isFavorite: event!.isFavorite,
       );
 //
-      eventListProvider.updateEventInFirestore(updatedEvent);
+      eventListProvider.updateEventInFirestore(updatedEvent,userProvider.currentUser!.id);
         // Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreenRouteNamed);
       Navigator.pushNamedAndRemoveUntil(
         context,

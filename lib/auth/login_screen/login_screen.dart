@@ -1,15 +1,20 @@
+import 'package:event_planningapp/firebase_utils.dart';
 import 'package:event_planningapp/home_screen/widget/custom_text_form_field.dart';
 import 'package:event_planningapp/l10n/app_localizations.dart';
+import 'package:event_planningapp/provider/event_list_provider.dart';
 import 'package:event_planningapp/utils/app_assets.dart';
 import 'package:event_planningapp/utils/app_colors.dart';
 import 'package:event_planningapp/utils/app_routes.dart';
 import 'package:event_planningapp/utils/app_styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../home_screen/widget/custom_elevated_buttom.dart';
 import '../../home_screen/widget/toggle_switch_language.dart';
+import '../../provider/user_provider.dart';
 import '../../utils/alert_dialog.dart';
 class LoginScreen extends StatefulWidget {
    LoginScreen({super.key});
@@ -29,6 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
+
     return Scaffold(
       body: SafeArea(child:
       Padding(
@@ -160,6 +166,16 @@ class _LoginScreenState extends State<LoginScreen> {
             email: emailCtrl.text,
             password: passwordCtrl.text
         );
+       var user= await FireBaseUtils.readUserFromFireStore(credential.user?.uid ??'');
+       if (user == null) {
+         return ;
+       }
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.updateUser(user);
+        final eventProvider = Provider.of<EventListProvider>(context, listen: false);
+        eventProvider.changeSelectedIndex(0, userProvider.currentUser!.id);
+        eventProvider.getAllFavoriteEvents(userProvider.currentUser!.id);
+
         AlertDialogUtils.hideLoading(context: context);
         AlertDialogUtils.showMessage(context: context, msg: "Login Successfully",title: "Success",
             pos: "ok",posAction: (){
@@ -178,8 +194,9 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
       catch(e){
-        print(e.toString());
-      }
+        AlertDialogUtils.hideLoading(context: context);
+        AlertDialogUtils.showMessage(context: context,
+          msg: e.toString(),title: "error",);      }
     }
    // Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreenRouteNamed);
 

@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_planningapp/firebase_utils.dart';
 import 'package:event_planningapp/l10n/app_localizations.dart';
+import 'package:event_planningapp/model/my_user.dart';
 import 'package:event_planningapp/provider/app_language_provider.dart';
+import 'package:event_planningapp/provider/user_provider.dart';
 import 'package:event_planningapp/ui/tabs/home/widget/event_item.dart';
 import 'package:event_planningapp/ui/tabs/home/widget/event_tab_item.dart';
 import 'package:event_planningapp/utils/app_assets.dart';
@@ -40,11 +42,12 @@ class _HomeTapState extends State<HomeTap> {
   ];
 
   late EventListProvider eventListProvider;
+  late UserProvider userProvider;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      eventListProvider.getAllEvent();
+      eventListProvider.getAllEvent(userProvider.currentUser!.id);
       //eventListProvider.deleteEvent(eventId);
     });
   }
@@ -56,6 +59,8 @@ class _HomeTapState extends State<HomeTap> {
     var height=MediaQuery.of(context).size.height ;
     eventListProvider=Provider.of<EventListProvider>(context);
     eventListProvider.getEventNameList(context);
+     userProvider=Provider.of<UserProvider>(context);
+    // MyUser myUser;
     // if (eventListProvider.eventsList.isEmpty) {
     //   eventListProvider.getAllEvent();
     // }
@@ -71,7 +76,7 @@ class _HomeTapState extends State<HomeTap> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(AppLocalizations.of(context)!.welcomeBack,style: AppStyles.regular14White,),
-                Text(AppLocalizations.of(context)!.johnSafwat,style: AppStyles.bold24white,),
+                Text(userProvider.currentUser!.name ,style: AppStyles.bold24white,),
               ],
             ),
             Spacer(),
@@ -130,7 +135,7 @@ class _HomeTapState extends State<HomeTap> {
                         tabAlignment: TabAlignment.start,
                         isScrollable: true,
                         onTap: (index) {
-                          eventListProvider.changeSelectedIndex(index);
+                          eventListProvider.changeSelectedIndex(index,userProvider.currentUser!.id);
 
                         },
                         tabs:

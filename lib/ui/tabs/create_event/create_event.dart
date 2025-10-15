@@ -16,6 +16,7 @@ import '../../../l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../provider/event_list_provider.dart';
+import '../../../provider/user_provider.dart';
 
 class CreateEvent extends StatefulWidget {
   CreateEvent({super.key});
@@ -40,6 +41,8 @@ class _CreateEventState extends State<CreateEvent> {
   String? formatDate;
   String? formatTime;
  late EventListProvider eventListProvider;
+  late UserProvider userProvider;
+
   @override
   Widget build(BuildContext context) {
     List<String> eventNameList=[
@@ -78,6 +81,7 @@ class _CreateEventState extends State<CreateEvent> {
     var providerTheme=Provider.of<AppThemeProvider>(context);
     eventListProvider=Provider.of<EventListProvider>(context);
     selectedEventName = eventNameList[selectedIndex];
+    userProvider=Provider.of<UserProvider>(context);
 
 
 
@@ -256,7 +260,7 @@ class _CreateEventState extends State<CreateEvent> {
 
     });
   }
-  void addEvent(){
+  Future<void> addEvent() async {
     dateError = selectedDate == null ? "please Choose Event Date" : null;
     timeError = selectedTime == null ? "please Choose Event Time" : null;
     if (formkey.currentState?.validate()==true && dateError == null && timeError == null) {
@@ -268,33 +272,29 @@ class _CreateEventState extends State<CreateEvent> {
           eventDateTime: selectedDate,
           eventTime:formatTime
       );
-      FireBaseUtils.addEventToFirestore(event).timeout(Duration(seconds: 1),
-        onTimeout:() {
-          //todo alert dialog - tasat - snack bar
-          final snackBar = SnackBar(
-            behavior: SnackBarBehavior.floating,
-            elevation: 6, // ظل خفيف
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+     await FireBaseUtils.addEventToFirestore(event,userProvider.currentUser!.id).then((value) {
+       final snackBar = SnackBar(
+             behavior: SnackBarBehavior.floating,
+             elevation: 6,
+             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+             shape: RoundedRectangleBorder(
+               borderRadius: BorderRadius.circular(16),
+             ),
+             duration: Duration(seconds: 20),
+             content:
+             Text('Event Added'),backgroundColor: AppColors.primaryLight,
+             action: SnackBarAction(
+               textColor: AppColors.primaryLight,
+               label: 'Close' ,backgroundColor: AppColors.whiteColor,
+               onPressed: () {
+                 // Some code to undo the change.
+               },
+             ),
+           );
+       Navigator.pop(context);
 
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            duration: Duration(seconds: 1),
-            content:
-            Text('Event Added'),backgroundColor: AppColors.primaryLight,
-            action: SnackBarAction(
-              textColor: AppColors.primaryLight,
-              label: 'Close' ,backgroundColor: AppColors.whiteColor,
-              onPressed: () {
-                // Some code to undo the change.
-              },
-            ),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          print("Event Successfully");
-          Navigator.pop(context);
-        }, ).catchError((error) {
-        print("Error: $error");
+     },
+     ).catchError((error) {
       }
       );    }
     setState(() {
@@ -303,7 +303,7 @@ class _CreateEventState extends State<CreateEvent> {
   @override
   void dispose(){
     super.dispose();
-  eventListProvider.getAllEvent();
+  eventListProvider.getAllEvent(userProvider.currentUser!.id);
 
   }
 }
