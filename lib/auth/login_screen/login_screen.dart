@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:event_planningapp/firebase_utils.dart';
 import 'package:event_planningapp/home_screen/widget/custom_text_form_field.dart';
 import 'package:event_planningapp/l10n/app_localizations.dart';
@@ -10,10 +12,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 import '../../home_screen/widget/custom_elevated_buttom.dart';
 import '../../home_screen/widget/toggle_switch_language.dart';
+import '../../model/my_user.dart';
 import '../../provider/user_provider.dart';
 import '../../utils/alert_dialog.dart';
 class LoginScreen extends StatefulWidget {
@@ -133,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   CustomElevatedButtom(text: "${AppLocalizations.of(context)!.login_with_google}",
-                    onPressed: loginWithGoogle,backgroundColorElevated: AppColors.transparentColor,
+                    onPressed: signInWithGoogle,backgroundColorElevated: AppColors.transparentColor,
                     borderColor: AppColors.primaryLight,
                     hasIcon: true,childIconWidget:
                         Row(
@@ -160,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> login() async {
     if (formkey.currentState?.validate() == true) {
-      AlertDialogUtils.showLoading(context: context, msg: "loading .....");
+      AlertDialogUtils.showLoading(context: context, msg: AppLocalizations.of(context)!.loading);
       try {
         final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: emailCtrl.text,
@@ -177,12 +181,12 @@ class _LoginScreenState extends State<LoginScreen> {
         eventProvider.getAllFavoriteEvents(userProvider.currentUser!.id);
 
         AlertDialogUtils.hideLoading(context: context);
-        AlertDialogUtils.showMessage(context: context, msg: "Login Successfully",title: "Success",
-            pos: "ok",posAction: (){
+        AlertDialogUtils.showMessage(context: context, msg: AppLocalizations.of(context)!.login_successfully,title: AppLocalizations.of(context)?.success,
+            pos: AppLocalizations.of(context)!.ok,posAction: (){
               Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homeScreenRouteNamed,
                       (route)=>false);
             },
-            nav: "dismiss",navAction: (){
+            nav: AppLocalizations.of(context)!.dismiss,navAction: (){
               Navigator.pop(context);
             }
             );
@@ -190,19 +194,68 @@ class _LoginScreenState extends State<LoginScreen> {
         if (e.code == 'invalid-credential') {
           AlertDialogUtils.hideLoading(context: context);
           AlertDialogUtils.showMessage(context: context,
-            msg: "'No user found for that email or wrong password'",title: "error",);
+            msg: AppLocalizations.of(context)!.no_user_found_for_that_email_or_wrong_password,title: AppLocalizations.of(context)!.error,);
         }
       }
       catch(e){
         AlertDialogUtils.hideLoading(context: context);
         AlertDialogUtils.showMessage(context: context,
-          msg: e.toString(),title: "error",);      }
+          msg: e.toString(),title: AppLocalizations.of(context)!.error,);
+      }
     }
    // Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreenRouteNamed);
 
 
   }
 
-  void loginWithGoogle() {
+  Future<UserCredential> signInWithGoogle() async {
+    try {
+      await GoogleSignIn().signOut();
+
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        return Future.error("Google Sign-In cancelled");
+      }
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+      var user = await FireBaseUtils.readUserFromFireStore(userCredential.user?.uid ?? '');
+
+      if (user == null) {
+        user = MyUser(
+          id: userCredential.user?.uid ?? '',
+          name: userCredential.user?.displayName ?? '',
+          email: userCredential.user?.email ?? '',
+        );
+        await FireBaseUtils.addUserToFirestore(user);
+      }
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.updateUser(user);
+
+      final eventProvider = Provider.of<EventListProvider>(context, listen: false);
+      eventProvider.changeSelectedIndex(0, userProvider.currentUser!.id);
+      eventProvider.getAllFavoriteEvents(userProvider.currentUser!.id);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        AppRoutes.homeScreenRouteNamed,
+            (route) => false,
+      );
+      return userCredential;
+    }
+    catch (e) {
+      AlertDialogUtils.showMessage(
+        context: context,
+        msg: e.toString(),
+        title: AppLocalizations.of(context)!.google_sign_in_error,
+      );
+      rethrow;
+    }
   }
+
+
 }
+

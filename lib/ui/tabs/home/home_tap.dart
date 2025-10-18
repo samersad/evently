@@ -148,7 +148,7 @@ class _HomeTapState extends State<HomeTap> {
           ),
           Expanded(child:
           eventListProvider.filterEventsList.isEmpty?
-          Center(child: Text("no event found",style: Theme.of(context).textTheme.headlineMedium,))
+          Center(child: Text(AppLocalizations.of(context)!.no_events_founded,style: Theme.of(context).textTheme.headlineMedium,))
               :
           ListView.separated(itemBuilder: (context, index) {
             return Padding(

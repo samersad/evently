@@ -82,7 +82,27 @@
   "addEvent": "اضافه فعاليه",
   "eventDetails": "تفاصيل الفعاله",
   "editEvent": "تعديل الفعاليه",
-  "updateEvent": "تحديث الفعاليه"
+  "updateEvent": "تحديث الفعاليه",
+
+  "no_favorite_events_founded": "لا توجد أحداث مفضلة",
+  "no_events_founded": "لا توجد أحداث ",
+
+  "loading": "جارٍ التحميل....",
+  "register_successfully": "تم التسجيل بنجاح",
+  "login_successfully": "تم الدخول بنجاح",
+  "success": "نجاح",
+  "ok": "حسنًا",
+  "dismiss": "إغلاق",
+  "weak_password": "كلمة المرور ضعيفة",
+  "email_already_in_use": "البريد الإلكتروني مستخدم بالفعل",
+  "no_user_found_for_that_email_or_wrong_password": "لم يتم العثور على مستخدم بهذا البريد الإلكتروني أو كلمة المرور غير صحيحة",
+  "google_sign_in_error": "حدث خطأ أثناء تسجيل الدخول باستخدام جوجل",
+  "please_choose_event_date": "يرجى اختيار تاريخ الحدث",
+  "please_choose_event_time": "يرجى اختيار وقت الحدث",
+  "event_added_successfully": "تمت إضافة الحدث بنجاح",
+  "error": "خطا",
+  "close": "إغلاق"
+
 
 
 

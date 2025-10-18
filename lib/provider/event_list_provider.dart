@@ -12,6 +12,7 @@ class EventListProvider extends ChangeNotifier{
   List<Event> filterEventsList=[]; //empty
   List<String>  eventNameList=[];
   List<Event> eventsFavoriteList=[];
+  List<Event> eventsSearchList=[];
   int selectedIndex=0;
 
   List<String> getEventNameList( BuildContext context ){

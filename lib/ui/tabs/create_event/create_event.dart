@@ -261,8 +261,8 @@ class _CreateEventState extends State<CreateEvent> {
     });
   }
   Future<void> addEvent() async {
-    dateError = selectedDate == null ? "please Choose Event Date" : null;
-    timeError = selectedTime == null ? "please Choose Event Time" : null;
+    dateError = selectedDate == null ? AppLocalizations.of(context)!.please_choose_event_date : null;
+    timeError = selectedTime == null ? AppLocalizations.of(context)!.please_choose_event_time : null;
     if (formkey.currentState?.validate()==true && dateError == null && timeError == null) {
       Event event=Event(
           title: eventTitleCRl.text,
@@ -280,12 +280,12 @@ class _CreateEventState extends State<CreateEvent> {
              shape: RoundedRectangleBorder(
                borderRadius: BorderRadius.circular(16),
              ),
-             duration: Duration(seconds: 20),
+             duration: Duration(seconds: 1),
              content:
-             Text('Event Added'),backgroundColor: AppColors.primaryLight,
+             Text(AppLocalizations.of(context)!.event_added_successfully),backgroundColor: AppColors.primaryLight,
              action: SnackBarAction(
                textColor: AppColors.primaryLight,
-               label: 'Close' ,backgroundColor: AppColors.whiteColor,
+               label: AppLocalizations.of(context)!.close ,backgroundColor: AppColors.whiteColor,
                onPressed: () {
                  // Some code to undo the change.
                },

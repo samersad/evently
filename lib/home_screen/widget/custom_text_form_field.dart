@@ -20,7 +20,8 @@ class CustomTextFormField extends StatefulWidget {
     required this.controller,
     this.prefixIconColor,
     this.suffixIconColor,
-    this.maxLines=1
+    this.maxLines=1,
+    this.onChanged
   });
 
   final Color? borderSideColor;
@@ -38,6 +39,7 @@ class CustomTextFormField extends StatefulWidget {
   final Color? prefixIconColor;
   final Color? suffixIconColor;
   final int maxLines;
+  void Function(String)? onChanged ;
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -47,6 +49,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: widget.onChanged,
       maxLines: widget.maxLines,
       cursorColor: AppColors.primaryLight,
       validator: widget.validator,

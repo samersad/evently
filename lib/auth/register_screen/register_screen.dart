@@ -61,7 +61,8 @@ class _LoginScreenState extends State<RegisterScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: height*0.02,
                 children: [
-                  CustomTextFormField(hintText: "${AppLocalizations.of(context)!.name}",prefixIconName:Image.asset(AppAssets.name,color: Theme.of(context).highlightColor,),
+                  CustomTextFormField(hintText: "${AppLocalizations.of(context)!.name}",
+                    prefixIconName:Image.asset(AppAssets.name,color: Theme.of(context).highlightColor,),
                     keyboardType: TextInputType.emailAddress,
                     controller: nameCtrl,
                     validator:(name) {
@@ -147,7 +148,7 @@ class _LoginScreenState extends State<RegisterScreen> {
 
   Future<void> register() async {
     if (formkey.currentState?.validate()==true) {
-      AlertDialogUtils.showLoading(context: context, msg: "loading");
+      AlertDialogUtils.showLoading(context: context, msg: AppLocalizations.of(context)!.loading);
       try {
         final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailCtrl.text,
@@ -164,12 +165,12 @@ class _LoginScreenState extends State<RegisterScreen> {
         eventProvider.changeSelectedIndex(0, userProvider.currentUser!.id);
         eventProvider.getAllFavoriteEvents(userProvider.currentUser!.id);
         AlertDialogUtils.hideLoading(context: context);
-        AlertDialogUtils.showMessage(context: context, msg: "register Successfully",title: "Success",
-            pos: "ok",posAction: (){
+        AlertDialogUtils.showMessage(context: context, msg: AppLocalizations.of(context)!.register_successfully,title: AppLocalizations.of(context)!.success,
+            pos: AppLocalizations.of(context)!.ok,posAction: (){
               Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homeScreenRouteNamed,
                   (route)=>false);
             },
-            nav: "dismiss",navAction: (){
+            nav: AppLocalizations.of(context)!.dismiss,navAction: (){
              Navigator.pop(context);
             }
         );
@@ -178,14 +179,14 @@ class _LoginScreenState extends State<RegisterScreen> {
       on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           AlertDialogUtils.hideLoading(context: context);
-          AlertDialogUtils.showMessage(context: context, msg: "weak-password",title: "error",);
+          AlertDialogUtils.showMessage(context: context, msg: AppLocalizations.of(context)!.weak_password,title: AppLocalizations.of(context)!.error,);
         } else if (e.code == 'email-already-in-use') {
           AlertDialogUtils.hideLoading(context: context);
-          AlertDialogUtils.showMessage(context: context, msg: "email-already-in-use",title: "error",);
+          AlertDialogUtils.showMessage(context: context, msg: AppLocalizations.of(context)!.email_already_in_use,title: AppLocalizations.of(context)!.error,);
         }
       } catch (e) {
         AlertDialogUtils.hideLoading(context: context);
-        AlertDialogUtils.showMessage(context: context, msg: e.toString(),title: "error",);      }
+        AlertDialogUtils.showMessage(context: context, msg: e.toString(),title: AppLocalizations.of(context)!.error,);      }
     }
   }
 }
