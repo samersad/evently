@@ -10,6 +10,7 @@ import 'package:event_planningapp/ui/tabs/home/edit_event/edit_event.dart';
 import 'package:event_planningapp/ui/tabs/home/event_details/event_details.dart';
 import 'package:event_planningapp/utils/app_routes.dart';
 import 'package:event_planningapp/utils/app_theme.dart';
+import 'package:event_planningapp/utils/firebase_cloud_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseCloudMessaging.init();
   //await FirebaseFirestore.instance.disableNetwork();  //todo offline
   runApp(MultiProvider(
     providers: [
