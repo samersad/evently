@@ -521,7 +521,7 @@ abstract class AppLocalizations {
   /// No description provided for @eventDetails.
   ///
   /// In en, this message translates to:
-  /// **'EventDetails'**
+  /// **'Event Details'**
   String get eventDetails;
 
   /// No description provided for @editEvent.
@@ -535,6 +535,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update Event'**
   String get updateEvent;
+
+  /// No description provided for @no_favorite_events_founded.
+  ///
+  /// In en, this message translates to:
+  /// **'No Favorite Events Founded '**
+  String get no_favorite_events_founded;
+
+  /// No description provided for @no_events_founded.
+  ///
+  /// In en, this message translates to:
+  /// **'No Events Founded '**
+  String get no_events_founded;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'loading....'**
+  String get loading;
+
+  /// No description provided for @register_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'register Successfully'**
+  String get register_successfully;
+
+  /// No description provided for @login_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Login Successfully'**
+  String get login_successfully;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get success;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'Ok'**
+  String get ok;
+
+  /// No description provided for @dismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismiss;
+
+  /// No description provided for @weak_password.
+  ///
+  /// In en, this message translates to:
+  /// **'weak-password'**
+  String get weak_password;
+
+  /// No description provided for @email_already_in_use.
+  ///
+  /// In en, this message translates to:
+  /// **'email-already-in-use'**
+  String get email_already_in_use;
+
+  /// No description provided for @no_user_found_for_that_email_or_wrong_password.
+  ///
+  /// In en, this message translates to:
+  /// **'No user found for that email or wrong password'**
+  String get no_user_found_for_that_email_or_wrong_password;
+
+  /// No description provided for @google_sign_in_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Sign-In Error'**
+  String get google_sign_in_error;
+
+  /// No description provided for @please_choose_event_date.
+  ///
+  /// In en, this message translates to:
+  /// **'please Choose Event Date'**
+  String get please_choose_event_date;
+
+  /// No description provided for @please_choose_event_time.
+  ///
+  /// In en, this message translates to:
+  /// **'please Choose Event Time'**
+  String get please_choose_event_time;
+
+  /// No description provided for @event_added_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Added Successfully'**
+  String get event_added_successfully;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
 }
 
 class _AppLocalizationsDelegate

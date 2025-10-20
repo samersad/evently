@@ -223,11 +223,63 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseChooseTime => 'Please Choose Time';
 
   @override
-  String get eventDetails => 'EventDetails';
+  String get eventDetails => 'Event Details';
 
   @override
   String get editEvent => 'Edit Event';
 
   @override
   String get updateEvent => 'Update Event';
+
+  @override
+  String get no_favorite_events_founded => 'No Favorite Events Founded ';
+
+  @override
+  String get no_events_founded => 'No Events Founded ';
+
+  @override
+  String get loading => 'loading....';
+
+  @override
+  String get register_successfully => 'register Successfully';
+
+  @override
+  String get login_successfully => 'Login Successfully';
+
+  @override
+  String get success => 'Success';
+
+  @override
+  String get ok => 'Ok';
+
+  @override
+  String get dismiss => 'Dismiss';
+
+  @override
+  String get weak_password => 'weak-password';
+
+  @override
+  String get email_already_in_use => 'email-already-in-use';
+
+  @override
+  String get no_user_found_for_that_email_or_wrong_password =>
+      'No user found for that email or wrong password';
+
+  @override
+  String get google_sign_in_error => 'Google Sign-In Error';
+
+  @override
+  String get please_choose_event_date => 'please Choose Event Date';
+
+  @override
+  String get please_choose_event_time => 'please Choose Event Time';
+
+  @override
+  String get event_added_successfully => 'Event Added Successfully';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get close => 'Close';
 }

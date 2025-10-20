@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../home_screen/widget/custom_elevated_buttom.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../provider/app_language_provider.dart';
+import '../../../provider/user_provider.dart';
 import 'Thme/theme_buttom_sheet.dart';
 import 'language/language_buttom_sheet.dart';
 
@@ -26,6 +27,7 @@ class _ProfileTabState extends State<ProfileTab> {
     var height=MediaQuery.of(context).size.height ;
     var languageProvider=Provider.of<AppLanguageProvider>(context);
     var themeProvider=Provider.of<AppThemeProvider>(context);
+    var userProvider=Provider.of<UserProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -44,9 +46,9 @@ class _ProfileTabState extends State<ProfileTab> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("John Safwat",style: AppStyles.bold24white,),
+                  Text(userProvider.currentUser!.name,style: AppStyles.bold24white,),
 
-                  Text("johnsafwat.route@gmail.comqqqqqqqqqqqqq",style: AppStyles.medium16white,
+                  Text(userProvider.currentUser!.email,style: AppStyles.medium16white,
                     maxLines: 2,
                   ),
                 ],
@@ -114,6 +116,7 @@ class _ProfileTabState extends State<ProfileTab> {
               ),
             Spacer(),
             CustomElevatedButtom( onPressed: () {
+
               Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.loginScreenRouteNamed, (route) => false,);
             },
             backgroundColorElevated: AppColors.redColor,hasIcon: true,

@@ -74,9 +74,29 @@
  "pleaseChooseDate": "Please Choose Date",
  "pleaseChooseTime": "Please Choose Time",
  "addEvent": "Add Event",
- "eventDetails":"EventDetails",
+ "eventDetails":"Event Details",
  "editEvent": "Edit Event",
- "updateEvent": "Update Event"
+ "updateEvent": "Update Event",
+
+ "no_favorite_events_founded": "No Favorite Events Founded ",
+ "no_events_founded": "No Events Founded ",
+ "loading": "loading....",
+ "register_successfully": "register Successfully",
+ "login_successfully": "Login Successfully",
+ "success": "Success",
+ "ok": "Ok",
+ "dismiss": "Dismiss",
+ "weak_password": "weak-password",
+ "email_already_in_use": "email-already-in-use",
+ "no_user_found_for_that_email_or_wrong_password": "No user found for that email or wrong password",
+ "google_sign_in_error": "Google Sign-In Error",
+ "please_choose_event_date": "please Choose Event Date",
+ "please_choose_event_time": "please Choose Event Time",
+ "event_added_successfully": "Event Added Successfully",
+ "error": "Error",
+ "close": "Close"
+
+
 
 
 

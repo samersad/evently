@@ -230,4 +230,56 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get updateEvent => 'تحديث الفعاليه';
+
+  @override
+  String get no_favorite_events_founded => 'لا توجد أحداث مفضلة';
+
+  @override
+  String get no_events_founded => 'لا توجد أحداث ';
+
+  @override
+  String get loading => 'جارٍ التحميل....';
+
+  @override
+  String get register_successfully => 'تم التسجيل بنجاح';
+
+  @override
+  String get login_successfully => 'تم الدخول بنجاح';
+
+  @override
+  String get success => 'نجاح';
+
+  @override
+  String get ok => 'حسنًا';
+
+  @override
+  String get dismiss => 'إغلاق';
+
+  @override
+  String get weak_password => 'كلمة المرور ضعيفة';
+
+  @override
+  String get email_already_in_use => 'البريد الإلكتروني مستخدم بالفعل';
+
+  @override
+  String get no_user_found_for_that_email_or_wrong_password =>
+      'لم يتم العثور على مستخدم بهذا البريد الإلكتروني أو كلمة المرور غير صحيحة';
+
+  @override
+  String get google_sign_in_error => 'حدث خطأ أثناء تسجيل الدخول باستخدام جوجل';
+
+  @override
+  String get please_choose_event_date => 'يرجى اختيار تاريخ الحدث';
+
+  @override
+  String get please_choose_event_time => 'يرجى اختيار وقت الحدث';
+
+  @override
+  String get event_added_successfully => 'تمت إضافة الحدث بنجاح';
+
+  @override
+  String get error => 'خطا';
+
+  @override
+  String get close => 'إغلاق';
 }

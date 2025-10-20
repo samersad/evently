@@ -9,6 +9,7 @@ import '../../../../home_screen/widget/custom_elevated_buttom.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../model/event.dart';
 import '../../../../provider/app_theme_provider.dart';
+import '../../../../provider/user_provider.dart';
 import '../../../../utils/app_assets.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_styles.dart';
@@ -21,6 +22,8 @@ class EventDetails extends StatefulWidget {
 }
 
 class _EventDetailsState extends State<EventDetails> {
+  late UserProvider userProvider;
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +32,13 @@ class _EventDetailsState extends State<EventDetails> {
     var eventListProvider=Provider.of<EventListProvider>(context);
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
+    userProvider=Provider.of<UserProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.transparentColor,
         foregroundColor: AppColors.primaryLight,
-        title: Text(AppLocalizations.of(context)!.createEvent,style: AppStyles.bold20primary,),
+        title: Text(AppLocalizations.of(context)!.eventDetails,style: AppStyles.bold20primary,),
         centerTitle: true,
         actions: [
           InkWell(
@@ -43,7 +48,7 @@ class _EventDetailsState extends State<EventDetails> {
               child: Image.asset(AppAssets.editIcon)),
           SizedBox(width: width*0.02,),
           InkWell(onTap: ()  {
-            eventListProvider.deleteEvent(event.id!);
+            eventListProvider.deleteEvent(event.id!,userProvider.currentUser!.id);
             Navigator.of(context).pop();
           },
               child: Image.asset(AppAssets.deleteIcon)),

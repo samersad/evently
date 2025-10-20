@@ -8,16 +8,22 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../provider/user_provider.dart';
+
 class EventItem extends StatelessWidget {
 
    EventItem({super.key,required this.event});
   final Event event;
+   late UserProvider userProvider;
 
-  @override
+
+   @override
   Widget build(BuildContext context) {
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
     var eventListProvider=Provider.of<EventListProvider>(context);
+    userProvider=Provider.of<UserProvider>(context);
+
     return Container(
       height:height*0.25 ,
       decoration:BoxDecoration(
@@ -57,7 +63,7 @@ class EventItem extends StatelessWidget {
                   Expanded(child: Text("${event.title}",style: Theme.of(context).textTheme.headlineSmall,)),
                   InkWell(onTap:
                       () {
-                        eventListProvider.updateIsFavoriteEvent(event);
+                        eventListProvider.updateIsFavoriteEvent(event,userProvider.currentUser!.id);
                       },
                       child:event.isFavorite==true ?Icon(Icons.favorite,color: AppColors.primaryLight,)
                   :
