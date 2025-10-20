@@ -41,6 +41,8 @@ class _CreateEventState extends State<CreateEvent> {
   String? formatDate;
   String? formatTime;
   late EventListProvider eventListProvider;
+  late UserProvider userProvider;
+
   @override
   Widget build(BuildContext context) {
     List<String> eventNameList=[
@@ -203,6 +205,7 @@ class _CreateEventState extends State<CreateEvent> {
                             borderRadius: BorderRadius.circular(8),
                             color: AppColors.primaryLight
                         ),
+                        //
                         child: Image.asset(AppAssets.locationIcon,color: Theme.of(context).disabledColor),),
                       SizedBox(width: width*0.02,),
                       Text(AppLocalizations.of(context)!.chooseEventLocation,style: AppStyles.medium16primary,),
@@ -270,29 +273,29 @@ class _CreateEventState extends State<CreateEvent> {
           eventDateTime: selectedDate,
           eventTime:formatTime
       );
-     await FireBaseUtils.addEventToFirestore(event,userProvider.currentUser!.id).then((value) {
-       final snackBar = SnackBar(
-             behavior: SnackBarBehavior.floating,
-             elevation: 6,
-             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-             shape: RoundedRectangleBorder(
-               borderRadius: BorderRadius.circular(16),
-             ),
-             duration: Duration(seconds: 1),
-             content:
-             Text(AppLocalizations.of(context)!.event_added_successfully),backgroundColor: AppColors.primaryLight,
-             action: SnackBarAction(
-               textColor: AppColors.primaryLight,
-               label: AppLocalizations.of(context)!.close ,backgroundColor: AppColors.whiteColor,
-               onPressed: () {
-                 // Some code to undo the change.
-               },
-             ),
-           );
-       Navigator.pop(context);
+      await FireBaseUtils.addEventToFirestore(event,userProvider.currentUser!.id).then((value) {
+        final snackBar = SnackBar(
+          behavior: SnackBarBehavior.floating,
+          elevation: 6,
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          duration: Duration(seconds: 1),
+          content:
+          Text(AppLocalizations.of(context)!.event_added_successfully),backgroundColor: AppColors.primaryLight,
+          action: SnackBarAction(
+            textColor: AppColors.primaryLight,
+            label: AppLocalizations.of(context)!.close ,backgroundColor: AppColors.whiteColor,
+            onPressed: () {
+              // Some code to undo the change.
+            },
+          ),
+        );
+        Navigator.pop(context);
 
-     },
-     ).catchError((error) {
+      },
+      ).catchError((error) {
       }
       );    }
     setState(() {
@@ -301,7 +304,7 @@ class _CreateEventState extends State<CreateEvent> {
   @override
   void dispose(){
     super.dispose();
-    eventListProvider.getAllEvent();
+    eventListProvider.getAllEvent(userProvider.currentUser!.id);
 
   }
 }
