@@ -40,9 +40,7 @@ class _CreateEventState extends State<CreateEvent> {
   TimeOfDay? selectedTime ;
   String? formatDate;
   String? formatTime;
- late EventListProvider eventListProvider;
-  late UserProvider userProvider;
-
+  late EventListProvider eventListProvider;
   @override
   Widget build(BuildContext context) {
     List<String> eventNameList=[
@@ -303,7 +301,7 @@ class _CreateEventState extends State<CreateEvent> {
   @override
   void dispose(){
     super.dispose();
-  eventListProvider.getAllEvent(userProvider.currentUser!.id);
+    eventListProvider.getAllEvent();
 
   }
 }
