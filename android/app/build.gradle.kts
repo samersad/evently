@@ -24,17 +24,17 @@ dependencies {
 
 }
 
-android {
-    namespace = "com.example.event_planningapp"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = "29.0.13846066"
+    android {
+        namespace = "com.example.event_planningapp"
+        compileSdk = flutter.compileSdkVersion
+        ndkVersion = "29.0.13846066"
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-        isCoreLibraryDesugaringEnabled = true
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_11
+            targetCompatibility = JavaVersion.VERSION_11
+            isCoreLibraryDesugaringEnabled = true
 
-    }
+        }
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
