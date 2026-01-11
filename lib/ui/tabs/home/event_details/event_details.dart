@@ -1,7 +1,9 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:event_planningapp/provider/event_list_provider.dart';
 import 'package:event_planningapp/utils/app_routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +11,7 @@ import '../../../../home_screen/widget/custom_elevated_buttom.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../model/event.dart';
 import '../../../../provider/app_theme_provider.dart';
+import '../../../../provider/location_provider.dart';
 import '../../../../provider/user_provider.dart';
 import '../../../../utils/app_assets.dart';
 import '../../../../utils/app_colors.dart';
@@ -33,6 +36,8 @@ class _EventDetailsState extends State<EventDetails> {
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
     userProvider=Provider.of<UserProvider>(context);
+   var locationProvider=Provider.of<LocationProvider>(context);
+
 
     return Scaffold(
       appBar: AppBar(
@@ -112,7 +117,7 @@ class _EventDetailsState extends State<EventDetails> {
                       ),
                       child: Image.asset(AppAssets.locationIcon,color: Theme.of(context).disabledColor),),
                     SizedBox(width: width*0.02,),
-                    Text("Cairo , Egypt",style: AppStyles.medium16primary,),
+                    Expanded(child: AutoSizeText("${event.address}",style: AppStyles.medium16primary,)),
                     Spacer(),
                     Padding(
                       padding:  EdgeInsetsDirectional.only(end: width*0.03),
@@ -128,7 +133,32 @@ class _EventDetailsState extends State<EventDetails> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: AppColors.primaryLight,width: 2)
                 ),
-               // child: Text(""),
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(
+                      event.lat!,
+                      event.log!,
+                    ),
+                    zoom: 15,
+                  ),
+
+                  markers: locationProvider.eventLocation!=null ?{
+                    Marker(markerId: MarkerId("Selected Location"),
+                        position:event.address!=null ?
+                        LatLng(event.lat!,event.log!)
+                            :
+                        LatLng(locationProvider.eventLocation!.latitude,locationProvider.eventLocation!.longitude)
+
+                    ),
+                  }
+                      :
+                  {},
+                  zoomControlsEnabled: false,
+                  mapType: MapType.terrain,
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
+                ),
+
               ),
               Text(AppLocalizations.of(context)!.description,style: Theme.of(context).textTheme.labelMedium),
               Text(event.description!,style: Theme.of(context).textTheme.labelMedium),

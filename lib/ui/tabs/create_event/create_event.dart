@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:event_planningapp/firebase_utils.dart';
 import 'package:event_planningapp/home_screen/widget/custom_elevated_buttom.dart';
 import 'package:event_planningapp/home_screen/widget/custom_text_form_field.dart';
@@ -16,7 +17,9 @@ import '../../../l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../provider/event_list_provider.dart';
+import '../../../provider/location_provider.dart';
 import '../../../provider/user_provider.dart';
+import '../../../utils/app_routes.dart';
 
 class CreateEvent extends StatefulWidget {
   CreateEvent({super.key});
@@ -42,6 +45,16 @@ class _CreateEventState extends State<CreateEvent> {
   String? formatTime;
   late EventListProvider eventListProvider;
   late UserProvider userProvider;
+  late LocationProvider  locationProvider;
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<LocationProvider>(context, listen: false)
+          .clearEventLocation();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,9 +95,7 @@ class _CreateEventState extends State<CreateEvent> {
     eventListProvider=Provider.of<EventListProvider>(context);
     selectedEventName = eventNameList[selectedIndex];
     userProvider=Provider.of<UserProvider>(context);
-
-
-
+     locationProvider=Provider.of<LocationProvider>(context);
 
     var width=MediaQuery.of(context).size.width ;
     var height=MediaQuery.of(context).size.height ;
@@ -192,7 +203,9 @@ class _CreateEventState extends State<CreateEvent> {
                 SizedBox(height: height*0.01),
                 Text(AppLocalizations.of(context)!.location,style: Theme.of(context).textTheme.labelMedium,),
                 SizedBox(height: height*0.01),
-                CustomElevatedButtom(onPressed: (){},customPadding: 10,
+                CustomElevatedButtom(onPressed: (){
+                  Navigator.of(context).pushNamed(AppRoutes.locationPickerScreenRoueNamed);
+                },customPadding: 10,
                   borderColor: AppColors.primaryLight,
                   backgroundColorElevated: AppColors.transparentColor,
                   hasIcon: true,
@@ -208,7 +221,15 @@ class _CreateEventState extends State<CreateEvent> {
                         //
                         child: Image.asset(AppAssets.locationIcon,color: Theme.of(context).disabledColor),),
                       SizedBox(width: width*0.02,),
-                      Text(AppLocalizations.of(context)!.chooseEventLocation,style: AppStyles.medium16primary,),
+                      Expanded(
+                        child: AutoSizeText(maxLines: 10,
+                          locationProvider.eventAddress==null ?
+                          AppLocalizations.of(context)!.chooseEventLocation
+                              :
+                          "${locationProvider.eventAddress}",
+                          style: Theme.of(context).textTheme.labelMedium,  ),
+                      ),
+
                       Spacer(),
                       Padding(
                         padding:  EdgeInsetsDirectional.only(end: width*0.03),
@@ -271,7 +292,10 @@ class _CreateEventState extends State<CreateEvent> {
           eventImage:selectedEventImage ,
           eventName:selectedEventName ,
           eventDateTime: selectedDate,
-          eventTime:formatTime
+          eventTime:formatTime,
+          lat:locationProvider.eventLocation?.latitude,
+          log:locationProvider.eventLocation?.longitude,
+          address: locationProvider.eventAddress
       );
       await FireBaseUtils.addEventToFirestore(event,userProvider.currentUser!.id).then((value) {
         final snackBar = SnackBar(
@@ -308,18 +332,3 @@ class _CreateEventState extends State<CreateEvent> {
 
   }
 }
-
-/*
-            final snackBar = SnackBar(
-              content: const Text('Yay! A SnackBar!'),
-              action: SnackBarAction(
-                label: 'Undo',
-                onPressed: () {
-                  // Some code to undo the change.
-                },
-              ),
-            );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-
- */

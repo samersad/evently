@@ -4,7 +4,9 @@ import 'package:event_planningapp/provider/app_language_provider.dart';
 import 'package:event_planningapp/provider/app_theme_provider.dart';
 import 'package:event_planningapp/home_screen/home_screen.dart';
 import 'package:event_planningapp/provider/event_list_provider.dart';
+import 'package:event_planningapp/provider/location_provider.dart';
 import 'package:event_planningapp/provider/user_provider.dart';
+import 'package:event_planningapp/ui/location_picker/location_picker.dart';
 import 'package:event_planningapp/ui/tabs/create_event/create_event.dart';
 import 'package:event_planningapp/ui/tabs/home/edit_event/edit_event.dart';
 import 'package:event_planningapp/ui/tabs/home/event_details/event_details.dart';
@@ -32,7 +34,9 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (context) =>AppLanguageProvider() ,)  ,    
       ChangeNotifierProvider(create: (context) =>AppThemeProvider() ,),
       ChangeNotifierProvider(create: (context) =>EventListProvider() ,),
-      ChangeNotifierProvider(create: (context) =>UserProvider() ,)
+      ChangeNotifierProvider(create: (context) =>UserProvider() ,),
+      ChangeNotifierProvider(create: (context) =>LocationProvider() ,)
+
     ],
 
       child: const MyApp()));
@@ -74,7 +78,12 @@ class MyApp extends StatelessWidget{
        },
         AppRoutes.editEventScreenRoueNamed:(context){
         return EditEvent();
+
        },
+        AppRoutes.locationPickerScreenRoueNamed:(context){
+          return LocationPicker();
+
+        },
       },
       locale: Locale(languageProvider.appLanguage),
       localizationsDelegates: AppLocalizations.localizationsDelegates,

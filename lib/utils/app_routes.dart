@@ -10,6 +10,7 @@ class AppRoutes {
   static const String eventDetailsScreenRoueNamed = 'event_details_screen';
   static const String editEventScreenRoueNamed = 'edit_event_screen';
 
+  static const String locationPickerScreenRoueNamed = 'location_picker_screen';
 
 
 }

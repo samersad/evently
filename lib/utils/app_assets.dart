@@ -64,5 +64,8 @@ static const String sportBgDark = 'assets/images/sportBgDark.png';
   static const String deleteIcon = 'assets/images/deleteIcon.png';
   static const String CalendarIcon = 'assets/images/CalendarIcon.png';
 
+  static const String mapLight = 'assets/images/map_light.png';
+  static const String mapDark = 'assets/images/map_dark.png';
+  static const String mapPin = 'assets/images/pin.png';
 
 }

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:event_planningapp/home_screen/widget/custom_elevated_buttom.dart';
 import 'package:event_planningapp/home_screen/widget/custom_text_form_field.dart';
 import 'package:event_planningapp/provider/app_theme_provider.dart';
@@ -15,6 +16,7 @@ import '../../../../firebase_utils.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../model/event.dart';
 import '../../../../provider/event_list_provider.dart';
+import '../../../../provider/location_provider.dart';
 import '../../../../provider/user_provider.dart';
 
 
@@ -42,12 +44,14 @@ class _CreateEventState extends State<EditEvent> {
   late List<String> eventImageListDark;
   late EventListProvider eventListProvider;
   late UserProvider userProvider;
+  late LocationProvider  locationProvider;
 
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     event = ModalRoute.of(context)!.settings.arguments as Event;
+    locationProvider=Provider.of<LocationProvider>(context);
 
     eventTitleCRl.text = event?.title ?? "";
     descriptionCRl.text = event?.description ?? "";
@@ -202,23 +206,27 @@ class _CreateEventState extends State<EditEvent> {
                 SizedBox(height: height*0.01),
                 Text(AppLocalizations.of(context)!.location,style: Theme.of(context).textTheme.labelMedium,),
                 SizedBox(height: height*0.01),
-                CustomElevatedButtom(onPressed: (){},
+                CustomElevatedButtom(onPressed: (){
+                  Navigator.of(context).pushNamed(AppRoutes.locationPickerScreenRoueNamed);
+
+                },
                   customPadding: 10,
                  borderColor: AppColors.primaryLight,
                   backgroundColorElevated: AppColors.transparentColor,
                   hasIcon: true,
                   childIconWidget: Row(
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: width*0.04,vertical: height*0.02),
-                        margin: EdgeInsetsDirectional.only(start: width*0.04),
-                        decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: AppColors.primaryLight
-                      ),
-                      child: Image.asset(AppAssets.locationIcon,color: Theme.of(context).disabledColor),),
+                       Container(
+                          padding: EdgeInsets.symmetric(horizontal: width*0.04,vertical: height*0.02),
+                          margin: EdgeInsetsDirectional.only(start: width*0.04),
+                          decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: AppColors.primaryLight
+                        ),
+                        child: Image.asset(AppAssets.locationIcon,color: Theme.of(context).disabledColor),),
+
                       SizedBox(width: width*0.02,),
-                      Text("Cairo , Egypt",style: AppStyles.medium16primary,),
+                      Expanded(child: AutoSizeText("${locationProvider.eventAddress}",style: AppStyles.medium16primary,)),
                       Spacer(),
                       Padding(
                         padding:  EdgeInsetsDirectional.only(end: width*0.03),
@@ -282,6 +290,9 @@ class _CreateEventState extends State<EditEvent> {
         eventDateTime: selectedDate ?? event!.eventDateTime,
         eventTime: formatTime ?? event!.eventTime,
         isFavorite: event!.isFavorite,
+          lat:locationProvider.eventLocation?.latitude,
+          log:locationProvider.eventLocation?.longitude,
+          address: locationProvider.eventAddress
       );
 //
       eventListProvider.updateEventInFirestore(updatedEvent,userProvider.currentUser!.id);

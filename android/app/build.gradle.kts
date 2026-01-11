@@ -24,17 +24,17 @@ dependencies {
 
 }
 
-android {
-    namespace = "com.example.event_planningapp"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = "29.0.13846066"
+    android {
+        namespace = "com.example.event_planningapp"
+        compileSdk = flutter.compileSdkVersion
+        ndkVersion = "29.0.13846066"
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-        isCoreLibraryDesugaringEnabled = true
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_11
+            targetCompatibility = JavaVersion.VERSION_11
+            isCoreLibraryDesugaringEnabled = true
 
-    }
+        }
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
@@ -45,7 +45,7 @@ android {
         applicationId = "com.example.event_planningapp"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

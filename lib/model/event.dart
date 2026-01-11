@@ -10,8 +10,12 @@ class Event{
     DateTime? eventDateTime;
     String? eventTime;
     bool? isFavorite;
+    double? lat;
+    double? log;
+    String? address;
 
-    Event({
+
+      Event({
       this.id='',
       required this.title,
       required this.description,
@@ -19,19 +23,35 @@ class Event{
       required this.eventName,
       required this.eventDateTime,
       required this.eventTime,
+      this.lat,
+      this.log,
+      this.address,
       this.isFavorite=false,
 });
     //todo json to object
-    Event.fromFireStore(Map<String,dynamic> data):this(
-      id:data["id"] ,
-      title:data["title"] ,
-      description:data["description"] ,
-      eventName:data["event_name"] ,
-      eventImage: data["event_image"],
-      eventDateTime:DateTime.fromMillisecondsSinceEpoch(data["event_date_time"]),
-      eventTime: data["event_time"],
-      isFavorite: data["is_favorite"] as bool
-    );
+  Event.fromFireStore(Map<String, dynamic> data) : this(
+    id: data["id"],
+    title: data["title"],
+    description: data["description"],
+    eventName: data["event_name"],
+    eventImage: data["event_image"],
+    eventDateTime: data["event_date_time"] != null
+        ? DateTime.fromMillisecondsSinceEpoch(
+        data["event_date_time"])
+        : null,
+    eventTime: data["event_time"],
+    isFavorite: data["is_favorite"] ?? false,
+    lat: data["lat"] != null
+        ? (data["lat"] as num).toDouble()
+        : null,
+
+    log: data["log"] != null
+        ? (data["log"] as num).toDouble()
+        : null,
+
+    address: data["address"],
+  );
+
 
     //todo object to json
     Map<String,dynamic>toFireStore(){
@@ -43,7 +63,10 @@ class Event{
     'event_name': eventName,
     'event_date_time': eventDateTime?.millisecondsSinceEpoch,
     'is_favorite': isFavorite,
-    'event_time': eventTime
+    'event_time': eventTime,
+    'lat': lat,
+    'log': log,
+    'address': address
   };
 }
 

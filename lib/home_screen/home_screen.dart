@@ -1,4 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:event_planningapp/l10n/app_localizations.dart';
 import 'package:event_planningapp/utils/app_colors.dart';
 import 'package:event_planningapp/utils/app_routes.dart';
@@ -73,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ,
                     InkWell(
 
-                        child: Text(label[index],style: AppStyles.bold12White,))
+                        child: AutoSizeText(label[index],style: AppStyles.bold12White,maxLines: 1,))
                   ],
                 );
             },
