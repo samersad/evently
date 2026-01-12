@@ -18,7 +18,10 @@ class _LocationPickerState extends State<LocationPicker> {
   @override
   void initState() {
     super.initState();
-    Provider.of<LocationProvider>(context,listen: false).getCurrentLocation();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<LocationProvider>(context,listen: false).getCurrentLocation();
+
+    });
   }
   @override
   Widget build(BuildContext context) {
